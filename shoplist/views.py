@@ -11,7 +11,7 @@ def index(request):
 def auth(request):
     return render(
         request,
-        'authForm.html'
+        'login.html'
     )
 
 
@@ -25,7 +25,7 @@ def authorrecipe(request):
 def changepassword(request):
     return render(
         request,
-        'changePassword.html'
+        'password_change_form.html'
     )
 
 
@@ -74,7 +74,7 @@ def reg(request):
 def resetpassword(request):
     return render(
         request,
-        'resetPassword.html'
+        'password_reset_form.html'
     )
 
 

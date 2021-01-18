@@ -9,12 +9,13 @@
         <h1 class="main__title">Регистрация</h1>
     </div>
     <div class="form-container">
-        <form class="form">
+        <form method="post" action="{% url 'signup' %}" class="form">
+        {% csrf_token %}
             <div class="form__group">
                 <label for="id_first_name" class="form__label">Имя</label>
                 <div class="form__field-group">
                     <input type="text" name="first_name" id="id_first_name" class="form__input">
-                    <span class="form__error"></span>
+                    <span class="form__error"> </span>
                 </div>
             </div>
             <div class="form__group">
@@ -40,7 +41,7 @@
                 </div>
             </div>
             <div class="form__footer">
-                <button class="button button_style_blue">Создать аккаунт</button>
+                <button type="submit" class="button button_style_blue">Создать аккаунт</button>
             </div>
         </form>
     </div>
