@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.urls import reverse
+from multiselectfield import MultiSelectField
 
 User = get_user_model()
 
@@ -48,13 +49,14 @@ class Recipe(models.Model):
     title = models.CharField(max_length=100)
     image = models.ImageField(upload_to='recipe/')
     description = models.TextField(default='Описание')
-    ingredients = models.ManyToManyField(Ingredient, through='Quantity')
+    ingredients = models.ManyToManyField(Ingredient, through='Quantity', null=True, blank=True)
     # tag = models.CharField(
     #     max_length=10,
     #     choices=TAGS,
     #     verbose_name='Tag',
     # )
-    tag = models.ManyToManyField(Tag)
+    # tag = models.ManyToManyField(Tag)
+    tag = MultiSelectField(choices=TAGS, default=[1])
     time = models.IntegerField(verbose_name='Время приготовления')
     slug = models.SlugField()
 

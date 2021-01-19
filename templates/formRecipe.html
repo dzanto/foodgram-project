@@ -24,19 +24,20 @@
                 <div class="form__field-group">
                     <div class="tags">
                         <div class="tags__item">
-                            <input type="checkbox" name="breakfast" id="id_breakfast" class="tags__checkbox tags__checkbox_style_orange">
-                            <label for="id_breakfast" class="tags__label">Завтрак</label>
-                        </div>
-                        <div class="tags__item">
-                            <input type="checkbox" name="lunch" id="id_lunch" class="tags__checkbox tags__checkbox_style_green" checked>
-                            <label for="id_lunch" class="tags__label">Обед</label>
-                        </div>
-                        <div class="tags__item">
-                            <input type="checkbox" name="dinner" id="id_dinner" class="tags__checkbox tags__checkbox_style_purple" checked>
-                            <label for="id_dinner" class="tags__label">Ужин</label>
+                            {{ form.tag }}
+<!--                            <input type="checkbox" name="{{ form.tag.name }}" id="id_tag_0" class="tags__checkbox tags__checkbox_style_orange">-->
+<!--                            <label for="id_tag_0" class="tags__label">Завтрак</label>-->
+<!--                        </div>-->
+<!--                        <div class="tags__item">-->
+<!--                            <input type="checkbox" name="{{ form.tag.name }}" id="id_tag_1" class="tags__checkbox tags__checkbox_style_green" checked>-->
+<!--                            <label for="id_tag_1" class="tags__label">Обед</label>-->
+<!--                        </div>-->
+<!--                        <div class="tags__item">-->
+<!--                            <input type="checkbox" name="{{ form.tag.name }}" id="id_tag_2" class="tags__checkbox tags__checkbox_style_purple" checked>-->
+<!--                            <label for="id_tag_2" class="tags__label">Ужин</label>-->
                         </div>
                     </div>
-                    <span class="form__error">{{ form.tags.errors }}</span>
+                    <span class="form__error">{{ form.tag.errors }}</span>
                 </div>
             </div>
             <div class="form__group">
@@ -54,7 +55,7 @@
 
                     </div>
                     <span class="form__ingredient-link" id="addIng">Добавить ингредиент</span>
-                    <span class="form__error">{{ field.errors }}</span>
+                    <span class="form__error">{{ form.ingredients.errors }}</span>
                 </div>
             </div>
             <div class="form__group">
