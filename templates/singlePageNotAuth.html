@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Французские тосты{% endblock %}
+{% block title %}{{ object.title }}{% endblock %}
 {% block stylesheet %}
 <link rel="stylesheet" href="{% static 'shoplist/pages/single.css' %}">{% endblock %}
 {% block main %}
@@ -9,7 +9,10 @@
         <img src="{% static 'shoplist/images/testCardImg.png' %}" alt="какой-то текст" class="single-card__image">
         <div class="single-card__info">
             <div class="single-card__header-info">
-                <h1 class="single-card__title">Французские тосты</h1>
+                <h1 class="single-card__title">{{ object.title }}</h1>
+
+
+
 
             </div>
             <ul class="single-card__items">
@@ -18,8 +21,8 @@
                 <li class="single-card__item"><span class="badge badge_style_purple">Ужин</span></li>
             </ul>
             <div class="single-card__items single-card__items_column">
-                <p class="single-card__text"><span class="icon-time"></span> 20 мин.</p>
-                <p class="single-card__text"><span class="icon-user"></span> Вероника Чернова</p>
+                <p class="single-card__text"><span class="icon-time"></span> {{ object.time }} мин.</p>
+                <p class="single-card__text"><span class="icon-user"></span> {{ object.author }}</p>
             </div>
             <ul class="single-card__items">
                 <li class="single-card__item"><button class="button button_style_blue" name="purchases" data-out><span class="icon-plus"></span> Добавить в покупки</button></li>
@@ -37,9 +40,7 @@
             </div>
             <div class="single-card__section">
                 <h3 class="single-card__section-title">Описание:</h3>
-                <p class=" single-card__section-text">Смешать молоко с сахаром, добавить яйца, тщательно все взбить.
-                    Обмакнуть тосты в смесь и жарить на сливочном масле до золотистой корочки.</p>
-                <p class=" single-card__section-text">Полить сверху сиропом топинамбура и украсить ягодами.</p>
+                <p class=" single-card__section-text">{{ object.description }}</p>
             </div>
         </div>
     </div>

@@ -1,11 +1,29 @@
 from django.shortcuts import render
+from django.views.generic.list import ListView
+from django.views.generic.edit import CreateView
+from django.views.generic import DetailView
+from .models import Recipe
+from django.urls import reverse_lazy
+from . import forms
 
 
-def index(request):
-    return render(
-        request,
-        'indexNotAuth.html'
-    )
+class RecipeListView(ListView):
+    model = Recipe
+    template_name = 'indexNotAuth.html'
+    paginate_by = 6
+
+
+class RecipeCreateView(CreateView):
+    model = Recipe
+    form_class = forms.RecipeForm
+    template_name = 'formRecipe.html'
+    success_url = reverse_lazy('index')
+
+
+class RecipeDetailView(DetailView):
+    model = Recipe
+    template_name = 'singlePageNotAuth.html'
+
 
 
 def auth(request):
@@ -50,11 +68,7 @@ def formchangerecipe(request):
     )
 
 
-def formrecipe(request):
-    return render(
-        request,
-        'formRecipe.html'
-    )
+
 
 
 def myfollow(request):
@@ -92,8 +106,4 @@ def singlepage(request):
     )
 
 
-def singlepagenotauth(request):
-    return render(
-        request,
-        'singlePageNotAuth.html'
-    )
+

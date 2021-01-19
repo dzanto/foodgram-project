@@ -2,7 +2,8 @@
 {% load static %}
 {% block title %}Создание рецепта{% endblock %}
 {% block stylesheet %}
-<link rel="stylesheet" href="{% static 'shoplist/pages/form.css' %}">{% endblock %}
+    <link rel="stylesheet" href="{% static 'shoplist/pages/form.css' %}">
+{% endblock %}
 {% block main %}
 <main class="main container">
     <div class="main__header">
@@ -10,11 +11,12 @@
     </div>
     <div class="form-container">
         <form class="form" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
             <div class="form__group">
-                <label for="id_name" class="form__label">Название рецепта</label>
+                <label for="{{ form.title.id_for_label }}" class="form__label">Название рецепта</label>
                 <div class="form__field-group">
-                    <input type="text" id="id_name" name="name" class="form__input">
-                    <span class="form__error"></span>
+                    <input type="text" id="{{ form.title.id_for_label }}" name="{{ form.title.name }}" class="form__input">
+                    <span class="form__error">{{ form.title.errors }}</span>
                 </div>
             </div>
             <div class="form__group">
@@ -34,7 +36,7 @@
                             <label for="id_dinner" class="tags__label">Ужин</label>
                         </div>
                     </div>
-                    <span class="form__error"></span>
+                    <span class="form__error">{{ form.tags.errors }}</span>
                 </div>
             </div>
             <div class="form__group">
@@ -52,33 +54,36 @@
 
                     </div>
                     <span class="form__ingredient-link" id="addIng">Добавить ингредиент</span>
-                    <span class="form__error"></span>
+                    <span class="form__error">{{ field.errors }}</span>
                 </div>
             </div>
             <div class="form__group">
-                <label for="id_time" class="form__label">Время приготовления</label>
+                <label for="{{ form.time.id_for_label }}" class="form__label">Время приготовления</label>
                 <div class="form__field-group form__field-group_time">
-                    <input type="text" id="id_time" name="name" class="form__input">
-                    <label for="id_time" class="form__label">минут</label>
-                    <span class="form__error"></span>
+                    <input type="text" id="{{ form.time.id_for_label }}" name="{{ form.time.name }}" class="form__input">
+                    <label for="{{ form.time.id_for_label }}" class="form__label">минут</label>
+                    <span class="form__error">{{ form.time.errors }}</span>
                 </div>
             </div>
             <div class="form__group">
-                <label for="id_description" class="form__label">Описание</label>
+                <label for="{{ form.description.id_for_label }}" class="form__label">Описание</label>
                 <div class="form__field-group">
-                    <textarea name="description" id="id_description" rows="8" class="form__textarea"></textarea>
-                    <span class="form__error"></span>
+                    <textarea name="{{ form.description.name }}" id="{{ form.description.id_for_label }}" rows="8" class="form__textarea"></textarea>
+                    <span class="form__error">{{ form.description.errors }}</span>
                 </div>
             </div>
             <div class="form__group">
                 <span class="form__label">Загрузить фото</span>
                 <div class="form__field-group">
-                    <input type="file" name="file" id="id_file">
-                    <span class="form__error"></span>
+                    <input type="file" name="{{ form.image.name }}" id="{{ form.image.id_for_label }}">
+                    <span class="form__error">{{ form.image.errors }}</span>
                 </div>
             </div>
+            {% for error in form.non_field_errors %}
+                {{ error|escape }}
+            {% endfor %}
             <div class="form__footer">
-                <button class="button button_style_blue">Создать рецепт</button>
+                <button type="submit" class="button button_style_blue">Создать рецепт</button>
             </div>
         </form>
     </div>
