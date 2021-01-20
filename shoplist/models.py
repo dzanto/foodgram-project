@@ -49,25 +49,46 @@ class Recipe(models.Model):
     title = models.CharField(max_length=100)
     image = models.ImageField(upload_to='recipe/')
     description = models.TextField(default='Описание')
-    ingredients = models.ManyToManyField(Ingredient, through='Quantity', null=True, blank=True)
+    ingredients = models.ManyToManyField(
+        Ingredient,
+        through='Quantity',
+        null=True,
+        blank=True
+    )
     # tag = models.CharField(
     #     max_length=10,
     #     choices=TAGS,
     #     verbose_name='Tag',
     # )
     # tag = models.ManyToManyField(Tag)
-    tag = MultiSelectField(choices=TAGS, default=[1])
+    tag = MultiSelectField(choices=TAGS)
     time = models.IntegerField(verbose_name='Время приготовления')
-    slug = models.SlugField()
+    # slug = models.SlugField()
 
     def __str__(self):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('singlepagenotauth', args=[str(self.slug)])
+        return reverse('recipedetail', args=[str(self.id)])
 
 
 class Quantity(models.Model):
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE,)
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE,)
     quantity = models.IntegerField(verbose_name='Количество')
+
+
+class Follow(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="follower")
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="following")
+
+    class Meta:
+        unique_together = ("user", "author")
+
+
+class Favorite(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="favorites")
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name="favorites")
+
+    class Meta:
+        unique_together = ("user", "recipe")

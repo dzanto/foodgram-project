@@ -1,19 +1,19 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}{{ object.title }}{% endblock %}
+{% block title %}Французские тосты{% endblock %}
 {% block stylesheet %}
 <link rel="stylesheet" href="{% static 'shoplist/pages/single.css' %}">{% endblock %}
 {% block main %}
 <main class="main container">
-    <div class="single-card" data-id="371">
+    <div class="single-card" data-id="371" data-author="12">
         <img src="{% static 'shoplist/images/testCardImg.png' %}" alt="какой-то текст" class="single-card__image">
         <div class="single-card__info">
             <div class="single-card__header-info">
-                <h1 class="single-card__title">{{ object.title }}</h1>
-
-
-
-
+                <h1 class="single-card__title">Французские тосты</h1>
+                <div class="single-card__favorite">
+                    <button class="button button_style_none" name="favorites" data-out><span class="icon-favorite icon-favorite_big"></span></button>
+                    <div class="single-card__favorite-tooltip tooltip">Добавить в избранное</div>
+                </div>
             </div>
             <ul class="single-card__items">
                 <li class="single-card__item"><span class="badge badge_style_green">Обед</span></li>
@@ -21,11 +21,15 @@
                 <li class="single-card__item"><span class="badge badge_style_purple">Ужин</span></li>
             </ul>
             <div class="single-card__items single-card__items_column">
-                <p class="single-card__text"><span class="icon-time"></span> {{ object.time }} мин.</p>
-                <p class="single-card__text"><span class="icon-user"></span> {{ object.author }}</p>
+                <p class="single-card__text"><span class="icon-time"></span> 20 мин.</p>
+                <ul class="single-card__items">
+                    <li class="single-card__item"><p class="single-card__text"><span class="icon-user"></span> Вероника Чернова</p></li>
+                    <li class="single-card__item">  <a style="margin-left: 2.5em" href="#" class="single-card__text">Редактировать рецепт</a></li>
+                </ul>
             </div>
             <ul class="single-card__items">
                 <li class="single-card__item"><button class="button button_style_blue" name="purchases" data-out><span class="icon-plus"></span> Добавить в покупки</button></li>
+                <li class="single-card__item"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>Подписаться на автора</button></li>
             </ul>
             <div class="single-card__section">
                 <h3 class="single-card__section-title">Ингридиенты:</h3>
@@ -40,7 +44,9 @@
             </div>
             <div class="single-card__section">
                 <h3 class="single-card__section-title">Описание:</h3>
-                <p class=" single-card__section-text">{{ object.description }}</p>
+                <p class=" single-card__section-text">Смешать молоко с сахаром, добавить яйца, тщательно все взбить.
+                    Обмакнуть тосты в смесь и жарить на сливочном масле до золотистой корочки.</p>
+                <p class=" single-card__section-text">Полить сверху сиропом топинамбура и украсить ягодами.</p>
             </div>
         </div>
     </div>
@@ -49,8 +55,9 @@
 <script src="{% static 'shoplist/js/components/MainCards.js' %}"></script>
 <script src="{% static 'shoplist/js/components/Purchases.js' %}"></script>
 <script src="{% static 'shoplist/js/components/Header.js' %}"></script>
+<script src="{% static 'shoplist/js/components/Favorites.js' %}"></script>
 <script src="{% static 'shoplist/js/config/config.js' %}"></script>
 <script src="{% static 'shoplist/js/api/Api.js' %}"></script>
+<script src="{% static 'shoplist/js/components/Subscribe.js' %}"></script>
 <script src="{% static 'shoplist/js/components/SingleCard.js' %}"></script>
-<script src="{% static 'shoplist/singlePageNotAuth.js' %}"></script>
-
+<script src="{% static 'shoplist/singlePage.js' %}"></script>
