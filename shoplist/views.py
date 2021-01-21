@@ -12,6 +12,7 @@ from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import generics
+from django.views.decorators.csrf import csrf_exempt
 
 
 class RecipeListView(ListView):
@@ -75,7 +76,7 @@ class APIFavorite(APIView):
     def post(self, request):
         id = int(request.data['id'])
         print(id)
-        print(request.user.id)
+        print(request.user)
         recipe = get_object_or_404(Recipe, id=id)
         data = {'user': request.user.id, 'recipe': id}
         serializer = serializers.FavoriteSerializer(data=data)

@@ -1,12 +1,13 @@
 from django.urls import path
 from shoplist import views
+from django.views.decorators.csrf import csrf_exempt
 
 urlpatterns = [
     path("", views.RecipeListView.as_view(), name="index"),
     path("formrecipe/", views.RecipeCreateView.as_view(), name="formrecipe"),
     path('recipes/<int:pk>/', views.RecipeDetailView.as_view(), name='recipedetail'),
     # path("favorites/", views.recipe_add_favorite, name="add_favorite"),
-    path("favorites", views.APIFavorite.as_view(), name="addfavorite"),
+    path("favorites", csrf_exempt(views.APIFavorite.as_view()), name="addfavorite"),
     # path("auth/", views.auth, name="auth"),
     path("authorrecipe/", views.authorrecipe, name="authorrecipe"),
     path("changepassword/", views.changepassword, name="changepassword"),
