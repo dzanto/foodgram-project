@@ -74,6 +74,8 @@ class APIFavorite(APIView):
 
     def post(self, request):
         id = int(request.data['id'])
+        print(id)
+        print(request.user.id)
         recipe = get_object_or_404(Recipe, id=id)
         data = {'user': request.user.id, 'recipe': id}
         serializer = serializers.FavoriteSerializer(data=data)
@@ -81,9 +83,6 @@ class APIFavorite(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        # return Response(request.data)
-
-
 
 
 def auth(request):
