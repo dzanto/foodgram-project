@@ -155,14 +155,18 @@ def formchangerecipe(request):
 def my_follow(request):
     # recipes = Recipe.objects.filter(author__following__user=request.user)
     # follows = Follow.objects.filter(user=request.user)
-    users = User.objects.filter(follower__user=request.user)
+    users = User.objects.filter(following__user=request.user)
     paginator = Paginator(users, 3)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     return render(
         request,
         'myFollow.html',
-        {'page': page, 'paginator': paginator}
+        {
+            'page': page,
+            'paginator': paginator,
+            # 'users': users,
+        }
     )
 
 
