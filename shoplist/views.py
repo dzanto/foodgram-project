@@ -13,6 +13,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import generics
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
 
 
 class RecipeListView(ListView):
@@ -84,6 +85,28 @@ class APIFavorite(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@csrf_exempt
+@api_view(['POST'])
+def api_favorite(request):
+    id = int(request.data['id'])
+    data = {'user': request.user.id, 'recipe': id}
+    serializer = serializers.FavoriteSerializer(data=data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors,
+                    status=status.HTTP_400_BAD_REQUEST)
+
+
+@csrf_exempt
+@api_view(['DELETE'])
+def del_favorite(request, pk):
+    recipe = Recipe.objects.get(id=pk)
+    Favorite.objects.filter(user=request.user, recipe=recipe).delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 def auth(request):

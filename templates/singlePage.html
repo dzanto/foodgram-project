@@ -5,7 +5,6 @@
 <link rel="stylesheet" href="{% static 'shoplist/pages/single.css' %}">{% endblock %}
 {% block main %}
 <main class="main container">
-    {% csrf_token %}
     <div class="single-card" data-id="{{ object.id }}" data-author="{{ object.author }}">
         <img src="/media/{{ recipe.image }}" alt="{{ object.title }}" class="single-card__image">
         <div class="single-card__info">
