@@ -8,16 +8,15 @@
     <div class="main__header">
         <h1 class="main__title">Мои подписки</h1>
     </div>
-{% for follows in page %}
+{% for user in page %}
 <div class="card-list">
-    {% for follow in follows %}
-        <div class="card-user" data-author="{{ follow.author.id }}">
+        <div class="card-user" data-author="{{ user.id }}">
         <div class="card-user__header">
-            <h2 class="card-user__title">{{ follow.author.name }}</h2>
+            <h2 class="card-user__title">{{ user.name }}</h2>
         </div>
         <div class="card-user__body">
             <ul class="card-user__items">
-                {% for recipe in follow.following.recipes.all %}
+                {% for recipe in user.recipes.all %}
                 <li class="card-user__item">
                     <div class="recipe">
                         <img src="/media/{{ recipe.image }}" alt="{{ recipe.title }}" class="recipe__image">
@@ -35,7 +34,7 @@
             <button class="button button_style_light-blue button_size_auto" name="subscribe">Отписаться</button>
         </div>
     </div>
-    {% endfor %}
+
         <div class="card-user" data-author="707">
             <div class="card-user__header">
                 <h2 class="card-user__title">Вероника Чернова</h2>
