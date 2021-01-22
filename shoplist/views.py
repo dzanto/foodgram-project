@@ -1,7 +1,7 @@
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView
 from django.views.generic import DetailView
-from .models import Recipe, User, Favorite
+from .models import Recipe, User, Favorite, Follow
 from django.urls import reverse_lazy
 from . import forms, serializers
 from rest_framework import status
@@ -14,6 +14,7 @@ from rest_framework.response import Response
 from rest_framework import generics
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
+from django.core.paginator import Paginator
 
 
 class RecipeListView(ListView):
@@ -59,32 +60,32 @@ class RecipeDetailView(DetailView):
 #     return redirect("profile", username=username)
 
 
-@login_required
-def recipe_add_favorite(request, pk):
-    recipe = get_object_or_404(Recipe, id=pk)
-    is_favorite = Favorite.objects.filter(user=request.user).filter(recipe=recipe).exists()
-    if is_favorite:
-        return redirect("recipedetail", pk=pk)
-    favorite = Favorite()
-    favorite.recipe = recipe
-    favorite.user = request.user
-    favorite.save()
-    return redirect("recipedetail", pk=pk)
+# @login_required
+# def recipe_add_favorite(request, pk):
+#     recipe = get_object_or_404(Recipe, id=pk)
+#     is_favorite = Favorite.objects.filter(user=request.user).filter(recipe=recipe).exists()
+#     if is_favorite:
+#         return redirect("recipedetail", pk=pk)
+#     favorite = Favorite()
+#     favorite.recipe = recipe
+#     favorite.user = request.user
+#     favorite.save()
+#     return redirect("recipedetail", pk=pk)
 
 
-class APIFavorite(APIView):
-
-    def post(self, request):
-        id = int(request.data['id'])
-        print(id)
-        print(request.user)
-        recipe = get_object_or_404(Recipe, id=id)
-        data = {'user': request.user.id, 'recipe': id}
-        serializer = serializers.FavoriteSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+# class APIFavorite(APIView):
+#
+#     def post(self, request):
+#         id = int(request.data['id'])
+#         print(id)
+#         print(request.user)
+#         recipe = get_object_or_404(Recipe, id=id)
+#         data = {'user': request.user.id, 'recipe': id}
+#         serializer = serializers.FavoriteSerializer(data=data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 
@@ -151,14 +152,18 @@ def formchangerecipe(request):
     )
 
 
-
-
-
-def myfollow(request):
+def my_follow(request):
+    # recipes = Recipe.objects.filter(author__following__user=request.user)
+    follows = Follow.objects.filter(user=request.user)
+    paginator = Paginator(follows, 3)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
     return render(
         request,
-        'myFollow.html'
+        'myFollow.html',
+        {'page': page, 'paginator': paginator}
     )
+
 
 
 def reg(request):

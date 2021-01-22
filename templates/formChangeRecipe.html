@@ -99,8 +99,10 @@
     </div>
 </main>
 {% endblock %}
+{% block javascript %}
 <script src="{% static 'shoplist/js/components/Header.js' %}"></script>
 <script src="{% static 'shoplist/js/config/config.js' %}"></script>
 <script src="{% static 'shoplist/js/api/Api.js' %}"></script>
 <script src="{% static 'js/utils/debouncing.js' %}"></script>
 <script src="{% static 'formRecipe.js' %}"></script>
+{% endblock %}

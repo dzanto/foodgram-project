@@ -10,6 +10,7 @@
     {% include "includes/paginator.html" %}
 </main>
 {% endblock %}
+{% block javascript %}
 <script src="{% static 'shoplist/js/components/MainCards.js' %}"></script>
 <script src="{% static 'shoplist/js/components/Purchases.js' %}"></script>
 <script src="{% static 'shoplist/js/components/Header.js' %}"></script>
@@ -18,3 +19,4 @@
 <script src="{% static 'shoplist/js/api/Api.js' %}"></script>
 <script src="{% static 'js/components/CardList.js' %}"></script>
 <script src="{% static 'favorite.js' %}"></script>
+{% endblock %}

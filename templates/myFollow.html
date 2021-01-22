@@ -8,34 +8,24 @@
     <div class="main__header">
         <h1 class="main__title">Мои подписки</h1>
     </div>
+{% for follows in page %}
 <div class="card-list">
-        <div class="card-user" data-author="700">
+    {% for follow in follows %}
+        <div class="card-user" data-author="{{ follow.author.id }}">
         <div class="card-user__header">
-            <h2 class="card-user__title">Вероника Чернова</h2>
+            <h2 class="card-user__title">{{ follow.author.name }}</h2>
         </div>
         <div class="card-user__body">
             <ul class="card-user__items">
+                {% for recipe in follow.following.recipes.all %}
                 <li class="card-user__item">
                     <div class="recipe">
-                        <img src="{% static 'shoplist/images/testCardImg.png' %}" alt="какой-то-текст" class="recipe__image">
-                        <h3 class="recipe__title">Французские тосты</h3>
-                        <p class="recipe__text"><span class="icon-time"></span> 20 мин.</p>
+                        <img src="/media/{{ recipe.image }}" alt="{{ recipe.title }}" class="recipe__image">
+                        <h3 class="recipe__title">{{ recipe.title }}</h3>
+                        <p class="recipe__text"><span class="icon-time"></span> {{ recipe.time }} мин.</p>
                     </div>
                 </li>
-                <li class="card-user__item">
-                    <div class="recipe">
-                        <img src="{% static 'shoplist/images/testCardImg.png' %}" alt="какой-то-текст" class="recipe__image">
-                        <h3 class="recipe__title">Французские тосты</h3>
-                        <p class="recipe__text"><span class="icon-time"></span> 20 мин.</p>
-                    </div>
-                </li>
-                <li class="card-user__item">
-                    <div class="recipe">
-                        <img src="{% static 'shoplist/images/testCardImg.png' %}" alt="какой-то-текст" class="recipe__image">
-                        <h3 class="recipe__title">Французские тосты</h3>
-                        <p class="recipe__text"><span class="icon-time"></span> 20 мин.</p>
-                    </div>
-                </li>
+                {% endfor %}
                 <li class="card-user__item">
                     <a href="#" class="card-user__link link">Еще 7 рецептов...</a>
                 </li>
@@ -45,6 +35,7 @@
             <button class="button button_style_light-blue button_size_auto" name="subscribe">Отписаться</button>
         </div>
     </div>
+    {% endfor %}
         <div class="card-user" data-author="707">
             <div class="card-user__header">
                 <h2 class="card-user__title">Вероника Чернова</h2>
@@ -118,9 +109,11 @@
             </div>
         </div>
     </div>
-    {% include "includes/paginator.html" %}
+{% endfor %}
+{% include "includes/paginator.html" %}
 </main>
 {% endblock %}
+{% block javascript %}
 <script src="{% static 'shoplist/js/components/MainCards.js' %}"></script>
 <script src="{% static 'shoplist/js/components/Header.js' %}"></script>
 <script src="{% static 'shoplist/js/config/config.js' %}"></script>
@@ -128,3 +121,4 @@
 <script src="{% static 'shoplist/js/components/Subscribe.js' %}"></script>
 <script src="{% static 'shoplist/js/components/MyFollow.js' %}"></script>
 <script src="{% static 'shoplist/myFollow.js' %}"></script>
+{% endblock %}
