@@ -142,9 +142,9 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny'
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
+        'shoplist.sessions.CsrfExemptSessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
-]
+    ],
 }
 
 APPEND_SLASH=False
