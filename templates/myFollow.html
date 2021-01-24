@@ -17,15 +17,19 @@
             </div>
             <div class="card-user__body">
                 <ul class="card-user__items">
-                    {% for recipe in user.recipes.all %}
-                    <li class="card-user__item">
-                        <div class="recipe">
-                            <img src="/media/{{ recipe.image }}" alt="{{ recipe.title }}" class="recipe__image">
-                            <h3 class="recipe__title">{{ recipe.title }}</h3>
-                            <p class="recipe__text"><span class="icon-time"></span> {{ recipe.time }} мин.</p>
-                        </div>
-                    </li>
-                    {% endfor %}
+                    {% if user.recipes.all.count < 2 %}
+                        {% for recipe in user.recipes.all %}
+                        <li class="card-user__item">
+                            <div class="recipe">
+                                <img src="/media/{{ recipe.image }}" alt="{{ recipe.title }}" class="recipe__image">
+                                <h3 class="recipe__title">{{ recipe.title }}</h3>
+                                <p class="recipe__text"><span class="icon-time"></span> {{ recipe.time }} мин.</p>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    {% else %}
+
+                    {% endif %}
                     <li class="card-user__item">
                         <a href="#" class="card-user__link link">Еще 7 рецептов...</a>
                     </li>

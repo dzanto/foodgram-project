@@ -40,6 +40,15 @@ class RecipeDetailView(DetailView):
     model = Recipe
     template_name = 'singlePage.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        recipe = get_object_or_404(Recipe, id=self.kwargs.get('pk'))
+        context['favorite'] = Favorite.objects.filter(
+            recipe_id=recipe.id).filter(
+            user=self.request.user).exists()
+
+        return context
+
 
 # @login_required
 # def profile_follow(request, username):
