@@ -17,8 +17,7 @@
             </div>
             <div class="card-user__body">
                 <ul class="card-user__items">
-                    {% if user.recipes.all.count < 2 %}
-                        {% for recipe in user.recipes.all %}
+                        {% for recipe in user.recipes.all|slice:":2" %}
                         <li class="card-user__item">
                             <div class="recipe">
                                 <img src="/media/{{ recipe.image }}" alt="{{ recipe.title }}" class="recipe__image">
@@ -27,11 +26,14 @@
                             </div>
                         </li>
                         {% endfor %}
-                    {% else %}
-
-                    {% endif %}
                     <li class="card-user__item">
-                        <a href="#" class="card-user__link link">Еще 7 рецептов...</a>
+                        <a href="#" class="card-user__link link">
+                            {% if user.recipes.all.count|add:"-2" < 1 %}
+                                Больше рецептов нет
+                            {% else %}
+                                Еще {{ user.recipes.all.count|add:"-2" }} рецептов...
+                            {% endif %}
+                        </a>
                     </li>
                 </ul>
             </div>
