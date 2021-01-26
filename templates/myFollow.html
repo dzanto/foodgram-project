@@ -9,50 +9,51 @@
         <h1 class="main__title">Мои подписки</h1>
     </div>
 
-<div class="card-list">
-    {% for user in page %}
-        <div class="card-user" data-author="{{ user.id }}">
-            <div class="card-user__header">
-                <h2 class="card-user__title">{{ user }}</h2>
-            </div>
-            <div class="card-user__body">
-                <ul class="card-user__items">
-                        {% for recipe in user.recipes.all|slice:":2" %}
+    <div class="card-list">
+        {% for user in page_obj %}
+            <div class="card-user" data-author="{{ user.id }}">
+                <div class="card-user__header">
+                    <h2 class="card-user__title">{{ user }}</h2>
+                </div>
+                <div class="card-user__body">
+                    <ul class="card-user__items">
+                            {% for recipe in user.recipes.all|slice:":2" %}
+                            <li class="card-user__item">
+                                <div class="recipe">
+                                    <img src="/media/{{ recipe.image }}" alt="{{ recipe.title }}" class="recipe__image">
+                                    <h3 class="recipe__title">{{ recipe.title }}</h3>
+                                    <p class="recipe__text"><span class="icon-time"></span> {{ recipe.time }} мин.</p>
+                                </div>
+                            </li>
+                            {% endfor %}
                         <li class="card-user__item">
-                            <div class="recipe">
-                                <img src="/media/{{ recipe.image }}" alt="{{ recipe.title }}" class="recipe__image">
-                                <h3 class="recipe__title">{{ recipe.title }}</h3>
-                                <p class="recipe__text"><span class="icon-time"></span> {{ recipe.time }} мин.</p>
-                            </div>
+                            <a href="#" class="card-user__link link">
+                                {% if user.recipes.all.count|add:"-2" < 1 %}
+                                    Больше рецептов нет
+                                {% else %}
+                                    Еще {{ user.recipes.all.count|add:"-2" }} рецептов...
+                                {% endif %}
+                            </a>
                         </li>
-                        {% endfor %}
-                    <li class="card-user__item">
-                        <a href="#" class="card-user__link link">
-                            {% if user.recipes.all.count|add:"-2" < 1 %}
-                                Больше рецептов нет
-                            {% else %}
-                                Еще {{ user.recipes.all.count|add:"-2" }} рецептов...
-                            {% endif %}
-                        </a>
-                    </li>
-                </ul>
+                    </ul>
+                </div>
+                <div class="card-user__footer">
+                    <button class="button button_style_light-blue button_size_auto" name="subscribe">Отписаться</button>
+                </div>
             </div>
-            <div class="card-user__footer">
-                <button class="button button_style_light-blue button_size_auto" name="subscribe">Отписаться</button>
-            </div>
-        </div>
-    {% endfor %}
-</div>
-
-{% include "includes/paginator.html" %}
+        {% endfor %}
+    </div>
+    {% if page_obj.has_other_pages %}
+        {% include "includes/paginator.html" %}
+    {% endif %}
 </main>
 {% endblock %}
 {% block javascript %}
-<script src="{% static 'shoplist/js/components/MainCards.js' %}"></script>
-<script src="{% static 'shoplist/js/components/Header.js' %}"></script>
-<script src="{% static 'shoplist/js/config/config.js' %}"></script>
-<script src="{% static 'shoplist/js/api/Api.js' %}"></script>
-<script src="{% static 'shoplist/js/components/Subscribe.js' %}"></script>
-<script src="{% static 'shoplist/js/components/MyFollow.js' %}"></script>
-<script src="{% static 'shoplist/myFollow.js' %}"></script>
+    <script src="{% static 'shoplist/js/components/MainCards.js' %}"></script>
+    <script src="{% static 'shoplist/js/components/Header.js' %}"></script>
+    <script src="{% static 'shoplist/js/config/config.js' %}"></script>
+    <script src="{% static 'shoplist/js/api/Api.js' %}"></script>
+    <script src="{% static 'shoplist/js/components/Subscribe.js' %}"></script>
+    <script src="{% static 'shoplist/js/components/MyFollow.js' %}"></script>
+    <script src="{% static 'shoplist/myFollow.js' %}"></script>
 {% endblock %}

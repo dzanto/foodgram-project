@@ -20,7 +20,7 @@ from django.core.paginator import Paginator
 class RecipeListView(ListView):
     model = Recipe
     template_name = 'indexNotAuth.html'
-    paginate_by = 6
+    paginate_by = 3
 
 
 class RecipeCreateView(CreateView):
@@ -165,14 +165,14 @@ def my_follow(request):
     # recipes = Recipe.objects.filter(author__following__user=request.user)
     # follows = Follow.objects.filter(user=request.user)
     users = User.objects.filter(following__user=request.user)
-    paginator = Paginator(users, 3)
-    page_number = request.GET.get('page')
-    page = paginator.get_page(page_number)
+    paginator = Paginator(users, 1)
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.page(page_number)
     return render(
         request,
         'myFollow.html',
         {
-            'page': page,
+            'page_obj': page_obj,
             'paginator': paginator,
             # 'users': users,
         }
