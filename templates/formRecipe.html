@@ -43,7 +43,6 @@
             <div class="form__group">
                 <label for="nameIngredient" class="form__label">Ингредиенты</label>
                 <div class="form__field-group">
-                    {{ form.ingredients }}
                     <div class="form__field-group-ingredientes">
                         <div class="form__dropdown">
                             <input type="text" id="nameIngredient" class="form__input">
@@ -95,6 +94,6 @@
 <script src="{% static 'shoplist/js/components/Header.js' %}"></script>
 <script src="{% static 'shoplist/js/config/config.js' %}"></script>
 <script src="{% static 'shoplist/js/api/Api.js' %}"></script>
-<script src="{% static 'js/utils/debouncing.js' %}"></script>
-<script src="{% static 'formRecipe.js' %}"></script>
+<script src="{% static 'shoplist/js/utils/debouncing.js' %}"></script>
+<script src="{% static 'shoplist/formRecipe.js' %}"></script>
 {% endblock %}

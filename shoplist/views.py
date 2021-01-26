@@ -1,7 +1,7 @@
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView
 from django.views.generic import DetailView
-from .models import Recipe, User, Favorite, Follow
+from .models import Recipe, User, Favorite, Follow, Ingredient
 from django.urls import reverse_lazy
 from . import forms, serializers
 from rest_framework import status
@@ -14,6 +14,7 @@ from rest_framework.response import Response
 from rest_framework import generics
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
+from rest_framework import filters
 from django.core.paginator import Paginator
 
 
@@ -48,6 +49,16 @@ class RecipeDetailView(DetailView):
             user=self.request.user).exists()
 
         return context
+
+
+class FavoriteListView(ListView):
+    model = Recipe
+    template_name = 'favorite.html'
+    paginate_by = 3
+
+    def get_queryset(self):
+        recipes = Recipe.objects.filter(favorites__user=self.request.user)
+        return recipes
 
 
 # @login_required
@@ -119,6 +130,14 @@ def del_favorite(request, pk):
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+class IngredientsApiView(generics.ListAPIView):
+    search_fields = ['title']
+    filter_backends = (filters.SearchFilter,)
+    queryset = Ingredient.objects.all()
+    serializer_class = serializers.IngredientSerializer
+
+
+
 def auth(request):
     return render(
         request,
@@ -147,12 +166,6 @@ def custompage(request):
     )
 
 
-def favorite(request):
-    return render(
-        request,
-        'favorite.html'
-    )
-
 
 def formchangerecipe(request):
     return render(
@@ -162,8 +175,6 @@ def formchangerecipe(request):
 
 
 def my_follow(request):
-    # recipes = Recipe.objects.filter(author__following__user=request.user)
-    # follows = Follow.objects.filter(user=request.user)
     users = User.objects.filter(following__user=request.user)
     paginator = Paginator(users, 1)
     page_number = request.GET.get('page', 1)
@@ -174,7 +185,6 @@ def my_follow(request):
         {
             'page_obj': page_obj,
             'paginator': paginator,
-            # 'users': users,
         }
     )
 

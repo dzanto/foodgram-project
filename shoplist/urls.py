@@ -4,14 +4,16 @@ from shoplist import views
 
 urlpatterns = [
     path("", views.RecipeListView.as_view(), name="index"),
-    path("formrecipe/", views.RecipeCreateView.as_view(), name="formrecipe"),
+    path("create-recipe/", views.RecipeCreateView.as_view(), name="create-recipe"),
     path('recipes/<int:pk>/', views.RecipeDetailView.as_view(), name='recipedetail'),
     path("favorites", views.api_favorite, name="add_favorite"),
     path("favorites/<int:pk>", views.del_favorite, name="del_favorite"),
+    path("ingredients/", views.IngredientsApiView.as_view(), name="search_ingredients"),
+
     path("authorrecipe/", views.authorrecipe, name="authorrecipe"),
     path("changepassword/", views.changepassword, name="changepassword"),
     path("custompage/", views.custompage, name="custompage"),
-    path("favorite/", views.favorite, name="favorite"),
+    path("favorite/", views.FavoriteListView.as_view(), name="favorite"),
     path("formchangerecipe/", views.formchangerecipe, name="formchangerecipe"),
     # path("formrecipe/", views.formrecipe, name="formrecipe"),
     path("myfollow/", views.my_follow, name="myfollow"),
