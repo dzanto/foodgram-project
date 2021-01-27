@@ -24,6 +24,24 @@ class RecipeListView(ListView):
     paginate_by = 3
 
 
+# def new_recipe(request):
+#
+#     if request.method != "POST":
+#         form = forms.RecipeForm()
+#         return render(request, "formRecipe.html", {"form": form})
+#
+#     form = forms.RecipeForm(request.POST)
+#     if not form.is_valid():
+#         print(request.POST.get('tag'))
+#         return render(request, "formRecipe.html",
+#                       {"form": form})
+#
+#     recipe = form.save(commit=False)
+#     recipe.author = request.user
+#     recipe.save()
+#     return redirect("index")
+
+
 class RecipeCreateView(CreateView):
     model = Recipe
     form_class = forms.RecipeForm
@@ -43,11 +61,12 @@ class RecipeDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        if self.request.user.is_anonymous:
+            return context
         recipe = get_object_or_404(Recipe, id=self.kwargs.get('pk'))
         context['favorite'] = Favorite.objects.filter(
             recipe_id=recipe.id).filter(
             user=self.request.user).exists()
-
         return context
 
 
