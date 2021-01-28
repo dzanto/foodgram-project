@@ -1,7 +1,7 @@
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView
 from django.views.generic import DetailView
-from .models import Recipe, User, Favorite, Follow, Ingredient
+from .models import Recipe, User, Favorite, Follow, Ingredient, Quantity
 from django.urls import reverse_lazy
 from . import forms, serializers
 from rest_framework import status
@@ -24,35 +24,49 @@ class RecipeListView(ListView):
     paginate_by = 3
 
 
-# def new_recipe(request):
-#
-#     if request.method != "POST":
-#         form = forms.RecipeForm()
-#         return render(request, "formRecipe.html", {"form": form})
-#
-#     form = forms.RecipeForm(request.POST)
-#     if not form.is_valid():
-#         print(request.POST.get('tag'))
-#         return render(request, "formRecipe.html",
-#                       {"form": form})
-#
-#     recipe = form.save(commit=False)
-#     recipe.author = request.user
-#     recipe.save()
-#     return redirect("index")
+def new_recipe(request):
+
+    if request.method != "POST":
+        form = forms.RecipeForm()
+        return render(request, "formRecipe.html", {"form": form})
+
+    form = forms.RecipeForm(request.POST, request.FILES)
+    if not form.is_valid():
+        for field in request.POST:
+            print(field)
+        return render(request, "formRecipe.html",
+                      {"form": form})
+
+    recipe = form.save(commit=False)
+    recipe.author = request.user
+    recipe.save()
+    for field in request.POST:
+        print(field)
+        # 'nameIngredient_1': ['молоко 4%'], 'valueIngredient_1': ['4'],
+        if 'nameIngredient' in field:
+            name_ingredient = request.POST[field]
+            value_ingredient = int(request.POST[field.replace('name', 'value')])
+            print(name_ingredient, value_ingredient)
+            ingredient = Ingredient.objects.get(title=name_ingredient)
+            quantity = Quantity.objects.create(
+                ingredient=ingredient,
+                recipe=recipe,
+                quantity=value_ingredient
+            )
+    return redirect("index")
 
 
-class RecipeCreateView(CreateView):
-    model = Recipe
-    form_class = forms.RecipeForm
-    template_name = 'formRecipe.html'
-    success_url = reverse_lazy('index')
-
-    def form_valid(self, form):
-        task = form.save(commit=False)
-        task.author = self.request.user
-        task.save()
-        return super().form_valid(form)
+# class RecipeCreateView(CreateView):
+#     model = Recipe
+#     form_class = forms.RecipeForm
+#     template_name = 'formRecipe.html'
+#     success_url = reverse_lazy('index')
+#
+#     def form_valid(self, form):
+#         task = form.save(commit=False)
+#         task.author = self.request.user
+#         task.save()
+#         return super().form_valid(form)
 
 
 class RecipeDetailView(DetailView):
