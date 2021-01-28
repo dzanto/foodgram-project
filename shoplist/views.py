@@ -1,7 +1,7 @@
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView
 from django.views.generic import DetailView
-from .models import Recipe, User, Favorite, Follow, Ingredient, Quantity
+from .models import Recipe, User, Favorite, Follow, Ingredient, Quantity, Purchase
 from django.urls import reverse_lazy
 from . import forms, serializers
 from rest_framework import status
@@ -79,6 +79,9 @@ class RecipeDetailView(DetailView):
             return context
         recipe = get_object_or_404(Recipe, id=self.kwargs.get('pk'))
         context['favorite'] = Favorite.objects.filter(
+            recipe_id=recipe.id).filter(
+            user=self.request.user).exists()
+        context['purchase'] = Purchase.objects.filter(
             recipe_id=recipe.id).filter(
             user=self.request.user).exists()
         return context
@@ -160,6 +163,27 @@ def api_favorite(request):
 def del_favorite(request, pk):
     recipe = Recipe.objects.get(id=pk)
     Favorite.objects.filter(user=request.user, recipe=recipe).delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@csrf_exempt
+@api_view(['POST'])
+def add_purchase(request):
+    id = int(request.data['id'])
+    data = {'user': request.user.id, 'recipe': id}
+    serializer = serializers.PurchaseSerializer(data=data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors,
+                    status=status.HTTP_400_BAD_REQUEST)
+
+
+@csrf_exempt
+@api_view(['DELETE'])
+def del_purchase(request, pk):
+    recipe = Recipe.objects.get(id=pk)
+    Purchase.objects.filter(user=request.user, recipe=recipe).delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 

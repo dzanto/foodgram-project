@@ -9,6 +9,9 @@ urlpatterns = [
     path('recipes/<int:pk>/', views.RecipeDetailView.as_view(), name='recipedetail'),
     path("favorites", views.api_favorite, name="add_favorite"),
     path("favorites/<int:pk>", views.del_favorite, name="del_favorite"),
+    path("purchases", views.add_purchase, name="add_purchase"),
+    path("purchases/<int:pk>", views.del_purchase, name="del_purchase"),
+
     path("ingredients/", views.IngredientsApiView.as_view(), name="search_ingredients"),
 
     path("authorrecipe/", views.authorrecipe, name="authorrecipe"),

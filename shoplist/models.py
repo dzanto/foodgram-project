@@ -52,8 +52,7 @@ class Recipe(models.Model):
     ingredients = models.ManyToManyField(
         Ingredient,
         through='Quantity',
-        null=True,
-        blank=True
+        blank=True,
     )
     # tag = models.CharField(
     #     max_length=10,
@@ -89,6 +88,14 @@ class Follow(models.Model):
 class Favorite(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="favorites")
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name="favorites")
+
+    class Meta:
+        unique_together = ("user", "recipe")
+
+
+class Purchase(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="purchases")
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name="purchases")
 
     class Meta:
         unique_together = ("user", "recipe")
