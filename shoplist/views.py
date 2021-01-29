@@ -16,6 +16,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 from rest_framework import filters
 from django.core.paginator import Paginator
+import json
 
 
 class RecipeListView(ListView):
@@ -56,19 +57,6 @@ def new_recipe(request):
     return redirect("index")
 
 
-# class RecipeCreateView(CreateView):
-#     model = Recipe
-#     form_class = forms.RecipeForm
-#     template_name = 'formRecipe.html'
-#     success_url = reverse_lazy('index')
-#
-#     def form_valid(self, form):
-#         task = form.save(commit=False)
-#         task.author = self.request.user
-#         task.save()
-#         return super().form_valid(form)
-
-
 class RecipeDetailView(DetailView):
     model = Recipe
     template_name = 'singlePage.html'
@@ -95,6 +83,17 @@ class FavoriteListView(ListView):
     def get_queryset(self):
         recipes = Recipe.objects.filter(favorites__user=self.request.user)
         return recipes
+
+
+class PurchaseListView(ListView):
+    model = Recipe
+    template_name = 'shopList.html'
+
+    def get_queryset(self):
+        recipes = Recipe.objects.filter(purchases__user=self.request.user)
+        return recipes
+
+
 
 
 # @login_required
@@ -187,6 +186,30 @@ def del_purchase(request, pk):
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+@csrf_exempt
+@api_view(['POST'])
+def add_follow(request):
+    author_name = request.data['id']
+    author = User.objects.get(username=author_name)
+    data = {'user': request.user.id, 'author': author.id}
+    serializer = serializers.FollowSerializer(data=data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors,
+                    status=status.HTTP_400_BAD_REQUEST)
+
+
+@csrf_exempt
+@api_view(['DELETE'])
+def del_follow(request, author):
+    author = User.objects.get(username=author)
+    Follow.objects.filter(user=request.user, author=author).delete()
+    data = {"success": "true"}
+    json_data = json.dumps(data)
+    return Response(data=json_data, status=status.HTTP_204_NO_CONTENT)
+
+
 class IngredientsApiView(generics.ListAPIView):
     search_fields = ['title']
     filter_backends = (filters.SearchFilter,)
@@ -258,13 +281,6 @@ def resetpassword(request):
     return render(
         request,
         'password_reset_form.html'
-    )
-
-
-def shoplist(request):
-    return render(
-        request,
-        'shopList.html'
     )
 
 

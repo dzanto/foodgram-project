@@ -10,30 +10,16 @@
     </div>
     <div class="card-list card-list_column">
         <ul class="shopping-list">
-            <li class="shopping-list__item" data-id="111">
-                <div class="recipe recipe_reverse">
-                    <img src="{% static 'shoplist/images/testCardImg.png' %}" alt="какой-то текст" class="recipe__image recipe__image_big">
-                    <h3 class="recipe__title">Французские тосты</h3>
-                    <p class="recipe__text"><span class="icon-time"></span> 20 мин.</p>
-                </div>
-                <a href="#" class="shopping-list__button link">Удалить</a>
-            </li>
-            <li class="shopping-list__item" data-id="1112">
-                <div class="recipe recipe_reverse">
-                    <img src="{% static 'shoplist/images/testCardImg.png' %}" alt="какой-то текст" class="recipe__image recipe__image_big">
-                    <h3 class="recipe__title">Французские тосты</h3>
-                    <p class="recipe__text"><span class="icon-time"></span> 20 мин.</p>
-                </div>
-                <a href="#" class="shopping-list__button link">Удалить</a>
-            </li>
-            <li class="shopping-list__item" data-id="1113">
-                <div class="recipe recipe_reverse">
-                    <img src="{% static 'shoplist/images/testCardImg.png' %}" alt="какой-то текст" class="recipe__image recipe__image_big">
-                    <h3 class="recipe__title">Французские тосты</h3>
-                    <p class="recipe__text"><span class="icon-time"></span> 20 мин.</p>
-                </div>
-                <a href="#" class="shopping-list__button link">Удалить</a>
-            </li>
+            {% for recipe in object_list %}
+                <li class="shopping-list__item" data-id="{{recipe.id}}">
+                    <div class="recipe recipe_reverse">
+                        <img src="/media/{{ recipe.image }}" alt="{{ recipe.title }}" class="recipe__image recipe__image_big">
+                        <h3 class="recipe__title">{{recipe.title}}</h3>
+                        <p class="recipe__text"><span class="icon-time"></span> {{recipe.time}} мин.</p>
+                    </div>
+                    <a href="#" class="shopping-list__button link">Удалить</a>
+                </li>
+            {% endfor %}
         </ul>
         <a href="#"><button class="button button_style_blue">Скачать список</button></a>
     </div>

@@ -53,8 +53,9 @@
                 {% else %}
                     <li class="single-card__item"><button class="button button_style_blue" name="purchases" data-out><span class="icon-plus"></span> Добавить в покупки</button></li>
                 {% endif %}
+
                 {% if user.is_authenticated %}
-                <li class="single-card__item"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>Подписаться на автора</button></li>
+                    <li class="single-card__item"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>Подписаться на автора</button></li>
                 {% endif %}
             </ul>
             <div class="single-card__section">

@@ -11,6 +11,9 @@ urlpatterns = [
     path("favorites/<int:pk>", views.del_favorite, name="del_favorite"),
     path("purchases", views.add_purchase, name="add_purchase"),
     path("purchases/<int:pk>", views.del_purchase, name="del_purchase"),
+    path("shoplist/", views.PurchaseListView.as_view(), name="shoplist"),
+    path("subscriptions", views.add_follow, name="add_follow"),
+    path("subscriptions/<str:author>", views.del_follow, name="del_follow"),
 
     path("ingredients/", views.IngredientsApiView.as_view(), name="search_ingredients"),
 
@@ -23,7 +26,7 @@ urlpatterns = [
     path("myfollow/", views.my_follow, name="myfollow"),
     path("reg/", views.reg, name="reg"),
     # path("resetpassword/", views.resetpassword, name="reset_password"),
-    path("shoplist/", views.shoplist, name="shoplist"),
+    # path("shoplist/", views.shoplist, name="shoplist"),
     # path("singlepage/", views.singlepage, name="singlepage"),
     # path("singlepagenotauth/", views.singlepagenotauth, name="singlepagenotauth"),
 ]
