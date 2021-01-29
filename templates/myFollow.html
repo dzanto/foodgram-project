@@ -11,7 +11,7 @@
 
     <div class="card-list">
         {% for user in page_obj %}
-            <div class="card-user" data-author="{{ user.id }}">
+            <div class="card-user" data-author="{{ user.username }}">
                 <div class="card-user__header">
                     <h2 class="card-user__title">{{ user }}</h2>
                 </div>

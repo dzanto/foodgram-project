@@ -14,6 +14,7 @@ urlpatterns = [
     path("shoplist/", views.PurchaseListView.as_view(), name="shoplist"),
     path("subscriptions", views.add_follow, name="add_follow"),
     path("subscriptions/<str:author>", views.del_follow, name="del_follow"),
+    # path("subscriptions/<int:pk>", views.del_follow_pk, name="del_follow_pk"),
 
     path("ingredients/", views.IngredientsApiView.as_view(), name="search_ingredients"),
 

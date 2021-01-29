@@ -24,6 +24,15 @@ class RecipeListView(ListView):
     template_name = 'indexNotAuth.html'
     paginate_by = 3
 
+    def get_queryset(self):
+        tag = self.request.GET.get('tag')
+        if tag is None:
+            recipes = Recipe.objects.all()
+            return recipes
+        recipes = Recipe.objects.filter(tag__in=tag)
+        return recipes
+
+
 
 def new_recipe(request):
 
@@ -43,7 +52,6 @@ def new_recipe(request):
     recipe.save()
     for field in request.POST:
         print(field)
-        # 'nameIngredient_1': ['молоко 4%'], 'valueIngredient_1': ['4'],
         if 'nameIngredient' in field:
             name_ingredient = request.POST[field]
             value_ingredient = int(request.POST[field.replace('name', 'value')])
@@ -72,6 +80,9 @@ class RecipeDetailView(DetailView):
         context['purchase'] = Purchase.objects.filter(
             recipe_id=recipe.id).filter(
             user=self.request.user).exists()
+        context['follow'] = Follow.objects.filter(
+            author=recipe.author).filter(
+            user=self.request.user).exists()
         return context
 
 
@@ -94,56 +105,6 @@ class PurchaseListView(ListView):
         return recipes
 
 
-
-
-# @login_required
-# def profile_follow(request, username):
-#
-#     author = get_object_or_404(User, username=username)
-#
-#     if author == request.user:
-#         return redirect("profile", username=username)
-#
-#     following = Follow.objects.filter(user=request.user).filter(author=author).exists()
-#     if following:
-#         return redirect("profile", username=username)
-#
-#     follow = Follow()
-#     follow.author = author
-#     follow.user = request.user
-#     follow.save()
-#     return redirect("profile", username=username)
-
-
-# @login_required
-# def recipe_add_favorite(request, pk):
-#     recipe = get_object_or_404(Recipe, id=pk)
-#     is_favorite = Favorite.objects.filter(user=request.user).filter(recipe=recipe).exists()
-#     if is_favorite:
-#         return redirect("recipedetail", pk=pk)
-#     favorite = Favorite()
-#     favorite.recipe = recipe
-#     favorite.user = request.user
-#     favorite.save()
-#     return redirect("recipedetail", pk=pk)
-
-
-# class APIFavorite(APIView):
-#
-#     def post(self, request):
-#         id = int(request.data['id'])
-#         print(id)
-#         print(request.user)
-#         recipe = get_object_or_404(Recipe, id=id)
-#         data = {'user': request.user.id, 'recipe': id}
-#         serializer = serializers.FavoriteSerializer(data=data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-
 @csrf_exempt
 @api_view(['POST'])
 def api_favorite(request):
@@ -162,7 +123,8 @@ def api_favorite(request):
 def del_favorite(request, pk):
     recipe = Recipe.objects.get(id=pk)
     Favorite.objects.filter(user=request.user, recipe=recipe).delete()
-    return Response(status=status.HTTP_204_NO_CONTENT)
+    data = {"success": True}
+    return Response(data, status=status.HTTP_200_OK)
 
 
 @csrf_exempt
@@ -183,7 +145,8 @@ def add_purchase(request):
 def del_purchase(request, pk):
     recipe = Recipe.objects.get(id=pk)
     Purchase.objects.filter(user=request.user, recipe=recipe).delete()
-    return Response(status=status.HTTP_204_NO_CONTENT)
+    data = {"success": True}
+    return Response(data, status=status.HTTP_200_OK)
 
 
 @csrf_exempt
@@ -195,8 +158,8 @@ def add_follow(request):
     serializer = serializers.FollowSerializer(data=data)
     if serializer.is_valid():
         serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors,
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+    return Response(data=serializer.errors,
                     status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -205,9 +168,19 @@ def add_follow(request):
 def del_follow(request, author):
     author = User.objects.get(username=author)
     Follow.objects.filter(user=request.user, author=author).delete()
-    data = {"success": "true"}
-    json_data = json.dumps(data)
-    return Response(data=json_data, status=status.HTTP_204_NO_CONTENT)
+    data = {"success": True}
+    return Response(data, status=status.HTTP_200_OK)
+
+
+@csrf_exempt
+@api_view(['DELETE'])
+def del_follow_pk(request, pk):
+    print(pk)
+    author = User.objects.get(id=pk)
+    print(author)
+    Follow.objects.filter(user=request.user, author=author).delete()
+    data = {"success": True}
+    return Response(data, status=status.HTTP_200_OK)
 
 
 class IngredientsApiView(generics.ListAPIView):
