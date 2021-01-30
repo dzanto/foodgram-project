@@ -29,8 +29,18 @@ class RecipeListView(ListView):
         if tag is None:
             recipes = Recipe.objects.all()
             return recipes
-        recipes = Recipe.objects.filter(tag__in=tag)
+        recipes = Recipe.objects.filter(tag__icontains=tag)
         return recipes
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        tag = self.request.GET.get('tag')
+        if tag is None:
+            context['tag'] = ['breakfast', 'lunch', 'dinner']
+            return context
+        context['tag'] = tag
+        return context
+
 
 
 
