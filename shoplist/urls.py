@@ -5,8 +5,9 @@ from shoplist import views
 urlpatterns = [
     path("", views.RecipeListView.as_view(), name="index"),
     path("create-recipe/", views.new_recipe, name="create-recipe"),
-    # path("create-recipe/", views.RecipeCreateView.as_view(), name="create-recipe"),
+    # path("edit-recipe/<int:pk>/", views.edit_recipe, name="edit-recipe"),
     path('recipes/<int:pk>/', views.RecipeDetailView.as_view(), name='recipedetail'),
+    path("recipes/<int:pk>/edit/", views.edit_recipe, name='edit-recipe'),
     path("favorites", views.api_favorite, name="add_favorite"),
     path("favorites/<int:pk>", views.del_favorite, name="del_favorite"),
     path("purchases", views.add_purchase, name="add_purchase"),

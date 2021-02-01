@@ -29,7 +29,7 @@ class RecipeListView(ListView):
         if tag is None:
             recipes = Recipe.objects.all()
             return recipes
-        recipes = Recipe.objects.filter(tag__icontains=tag)
+        recipes = Recipe.objects.filter(tags__title__icontains=tag)
         return recipes
 
     def get_context_data(self, **kwargs):
@@ -42,8 +42,6 @@ class RecipeListView(ListView):
         return context
 
 
-
-
 def new_recipe(request):
 
     if request.method != "POST":
@@ -52,8 +50,40 @@ def new_recipe(request):
 
     form = forms.RecipeForm(request.POST, request.FILES)
     if not form.is_valid():
-        for field in request.POST:
-            print(field)
+        return render(request, "formRecipe.html",
+                      {"form": form})
+
+    recipe = form.save(commit=False)
+    recipe.author = request.user
+    recipe.save()
+    for field in request.POST:
+        if 'nameIngredient' in field:
+            name_ingredient = request.POST[field]
+            value_ingredient = int(request.POST[field.replace('name', 'value')])
+            ingredient = Ingredient.objects.get(title=name_ingredient)
+            quantity = Quantity.objects.create(
+                ingredient=ingredient,
+                recipe=recipe,
+                quantity=value_ingredient
+            )
+    return redirect("index")
+
+
+def edit_recipe(request, pk):
+    print('edit_recipe')
+    recipe = get_object_or_404(Recipe, id=pk)
+
+    # if request.method != "POST":
+    #     form = forms.RecipeForm()
+    #     return render(request, "formRecipe.html", {"form": form})
+
+    form = forms.RecipeForm(
+        data=request.POST or None,
+        files=request.FILES or None,
+        instance=recipe
+    )
+    if not form.is_valid():
+        print('form is not valid')
         return render(request, "formRecipe.html",
                       {"form": form})
 

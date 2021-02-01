@@ -33,10 +33,16 @@ TAGS = (
 
 
 class Tag(models.Model):
-    mealtime = models.CharField(max_length=7)
+    title = models.CharField('Имя тега', max_length=20, db_index=True)
+    display_name = models.CharField('Имя тега для шаблона', max_length=20)
+    color = models.CharField('Цвет тега', max_length=20)
 
     def __str__(self):
-        return self.mealtime
+        return self.display_name
+
+    class Meta:
+        verbose_name = 'Тег'
+        verbose_name_plural = 'Теги'
 
 
 class Recipe(models.Model):
@@ -59,8 +65,12 @@ class Recipe(models.Model):
     #     choices=TAGS,
     #     verbose_name='Tag',
     # )
-    # tag = models.ManyToManyField(Tag)
-    tag = MultiSelectField(choices=TAGS)
+    tags = models.ManyToManyField(
+        Tag,
+        related_name='recipes',
+        verbose_name='Теги',
+    )
+    # tag = MultiSelectField(choices=TAGS)
     time = models.IntegerField(verbose_name='Время приготовления')
     # slug = models.SlugField()
 
