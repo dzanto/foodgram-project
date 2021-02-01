@@ -1,5 +1,5 @@
 from django.views.generic.list import ListView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import DetailView
 from .models import Recipe, User, Favorite, Follow, Ingredient, Quantity, Purchase
 from django.urls import reverse_lazy
@@ -44,18 +44,21 @@ class RecipeListView(ListView):
 
 def new_recipe(request):
 
+    labels = {
+        "main_title": "Создание рецепта",
+        "button": "Создать рецепт",
+        "del_button": False
+    }
+
     if request.method != "POST":
         form = forms.RecipeForm()
-        return render(request, "formRecipe.html", {"form": form})
+        return render(request, "formRecipe.html", {"form": form, "labels": labels})
 
     form = forms.RecipeForm(request.POST, request.FILES)
-    # print(request.POST)
-    # tags = request.POST.getlist('tags')
-    # for tag in tags:
-    #     print(tag)
+
     if not form.is_valid():
         return render(request, "formRecipe.html",
-                      {"form": form})
+                      {"form": form, "labels": labels})
 
     recipe = form.save(commit=False)
     recipe.author = request.user
@@ -67,7 +70,7 @@ def new_recipe(request):
             name_ingredient = request.POST[field]
             value_ingredient = int(request.POST[field.replace('name', 'value')])
             ingredient = Ingredient.objects.get(title=name_ingredient)
-            quantity = Quantity.objects.create(
+            quantity = Quantity.objects.get_or_create(
                 ingredient=ingredient,
                 recipe=recipe,
                 quantity=value_ingredient
@@ -83,12 +86,25 @@ def edit_recipe(request, pk):
         files=request.FILES or None,
         instance=recipe
     )
+    ingredients = Quantity.objects.filter(recipe=recipe)
+    labels = {
+        "main_title": "Редактирование рецепта",
+        "button": "Сохранить",
+        "del_button": True,
+        "recipe": recipe
+    }
+
+    if request.method != "POST":
+        return render(
+            request,
+            "formRecipe.html",
+            {"form": form, "ingredients": ingredients, "labels": labels})
 
     if not form.is_valid():
         return render(
             request,
             "formRecipe.html",
-            {"form": form}
+            {"form": form, "labels": labels}
         )
 
     recipe = form.save(commit=False)
@@ -103,12 +119,21 @@ def edit_recipe(request, pk):
             value_ingredient = int(request.POST[field.replace('name', 'value')])
             print(name_ingredient, value_ingredient)
             ingredient = Ingredient.objects.get(title=name_ingredient)
-            quantity = Quantity.objects.create(
+            quantity = Quantity.objects.get_or_create(
                 ingredient=ingredient,
                 recipe=recipe,
                 quantity=value_ingredient
             )
     return redirect("index")
+
+
+def del_recipe(request, pk):
+    get_object_or_404(Recipe, id=pk).delete()
+    return redirect("index")
+
+# class RecipeDelView(DeleteView):
+#     model = Recipe
+#     success_url = reverse_lazy('index')
 
 
 class RecipeDetailView(DetailView):

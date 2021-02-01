@@ -33,9 +33,9 @@ TAGS = (
 
 
 class Tag(models.Model):
-    title = models.CharField('Имя тега', max_length=20, db_index=True)
-    name = models.CharField('Имя тега для шаблона', max_length=20)
-    color = models.CharField('Цвет тега', max_length=20)
+    title = models.CharField('Имя тега', max_length=20, db_index=True, default="lunch")
+    name = models.CharField('Имя тега для шаблона', max_length=20, default="Обед")
+    color = models.CharField('Цвет тега', max_length=20, default="green")
 
     def __str__(self):
         return self.name
@@ -54,7 +54,7 @@ class Recipe(models.Model):
     )
     title = models.CharField(max_length=100)
     image = models.ImageField(upload_to='recipe/')
-    description = models.TextField(default='Описание')
+    description = models.TextField()
     ingredients = models.ManyToManyField(
         Ingredient,
         through='Quantity',
