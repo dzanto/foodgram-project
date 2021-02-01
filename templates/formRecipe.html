@@ -28,11 +28,11 @@
                                       <input
                                         type="checkbox"
                                         name="tags"
-                                        id="id_{{ tag.name }}"
+                                        id="id_{{ tag.title }}"
                                         class="tags__checkbox tags__checkbox_style_{{ tag.color }}"
                                         value="{{ tag.pk }}"
                                         {% if tag.pk in form.tags.value %}checked{% endif %}>
-                                      <label for="id_{{ tag.name }}" class="tags__label">{{ tag.display_name }}</label>
+                                      <label for="id_{{ tag.title }}" class="tags__label">{{ tag.name }}</label>
                                     </div>
                               {% endfor %}
                         </div>

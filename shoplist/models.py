@@ -34,11 +34,11 @@ TAGS = (
 
 class Tag(models.Model):
     title = models.CharField('Имя тега', max_length=20, db_index=True)
-    display_name = models.CharField('Имя тега для шаблона', max_length=20)
+    name = models.CharField('Имя тега для шаблона', max_length=20)
     color = models.CharField('Цвет тега', max_length=20)
 
     def __str__(self):
-        return self.display_name
+        return self.name
 
     class Meta:
         verbose_name = 'Тег'
@@ -82,7 +82,7 @@ class Recipe(models.Model):
 
 
 class Quantity(models.Model):
-    ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE,)
+    ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE, related_name='quantities')
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE,)
     quantity = models.IntegerField(verbose_name='Количество')
 
