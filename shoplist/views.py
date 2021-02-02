@@ -26,7 +26,6 @@ class RecipeListView(ListView):
     model = Recipe
     template_name = 'indexNotAuth.html'
     paginate_by = 3
-    slug_field = 'author'
 
     def get_queryset(self, **kwargs):
         tag = self.request.GET.get('tag')
@@ -34,16 +33,12 @@ class RecipeListView(ListView):
             recipes = Recipe.objects.all()
             return recipes
         recipes = Recipe.objects.filter(tags__title__icontains=tag)
-        # author = kwargs['author']
-        # print(author)
-        # recipes = recipes.filter(author__username=author)
         return recipes
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         tag = self.request.GET.get('tag')
         if tag is None:
-            # context['tag'] = ['breakfast', 'lunch', 'dinner']
             return context
         context['tag'] = tag
         return context

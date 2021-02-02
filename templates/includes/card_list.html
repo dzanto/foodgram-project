@@ -1,4 +1,5 @@
 {% load static %}
+{% load shoplist_extras %}
 <div class="card-list">
     {% for recipe in page_obj %}
     <div class="card" data-id="{{ recipe.id }}">
@@ -16,7 +17,7 @@
             </div>
         </div>
         <div class="card__footer">
-            {% if recipe in user.purchases.all %}
+            {% if recipe|is_purch_by:user %}
                 <button class="button button_style_light-blue-outline" name="purchases"><span class="icon-plus button__icon"></span>Рецепт добавлен</button>
             {% else %}
                 <button class="button button_style_light-blue" name="purchases" data-out><span class="icon-plus button__icon"></span>Добавить в покупки</button>
