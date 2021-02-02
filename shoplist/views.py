@@ -50,6 +50,7 @@ class RecipeListView(ListView):
 
 
 def recipe_list(request, author):
+    recipe_author = get_object_or_404(User, username=author)
     tag = request.GET.get('tag')
     if tag is None:
         recipes = Recipe.objects.filter(author__username=author)
@@ -62,7 +63,7 @@ def recipe_list(request, author):
     return render(
         request,
         "indexNotAuth.html",
-        {"tag": tag, "page_obj": page_obj}
+        {"tag": tag, "page_obj": page_obj, "author": recipe_author}
     )
 
 

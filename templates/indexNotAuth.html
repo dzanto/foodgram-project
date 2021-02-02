@@ -5,6 +5,11 @@
 {% block main %}
     <main class="main container">
         {% include "includes/main_header.html" %}
+        {% if author %}
+            <div class="author-subscribe" data-author="{{author.id}}">
+                <p style="padding: 0 0 2em 0;"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>Подписаться на автора</button></p>
+            </div>
+        {% endif %}
         {% include "includes/card_list.html" %}
         {% if page_obj.has_other_pages %}
             {% include "includes/paginator.html" %}
@@ -12,11 +17,21 @@
     </main>
 {% endblock %}
 {% block javascript %}
-<script src="{% static 'shoplist/js/components/MainCards.js' %}"></script>
-<script src="{% static 'shoplist/js/components/Purchases.js' %}"></script>
-<script src="{% static 'shoplist/js/config/config.js' %}"></script>
-<script src="{% static 'shoplist/js/components/CardList.js' %}"></script>
-<script src="{% static 'shoplist/js/components/Header.js' %}"></script>
-<script src="{% static 'shoplist/js/api/Api.js' %}"></script>
-<script src="{% static 'shoplist/indexNotAuth.js' %}"></script>
+    <script src="{% static 'shoplist/js/components/MainCards.js' %}"></script>
+    <script src="{% static 'shoplist/js/components/Purchases.js' %}"></script>
+    <script src="{% static 'shoplist/js/config/config.js' %}"></script>
+    <script src="{% static 'shoplist/js/components/CardList.js' %}"></script>
+    <script src="{% static 'shoplist/js/components/Header.js' %}"></script>
+    <script src="{% static 'shoplist/js/api/Api.js' %}"></script>
+
+    {% if user.is_authenticated %}
+        <script src="{% static 'shoplist/indexAuth.js' %}"></script>
+    {% else %}
+        <script src="{% static 'shoplist/indexNotAuth.js' %}"></script>
+    {% endif %}
+    {% if author %}
+        <script src="{% static 'shoplist/js/components/Subscribe.js' %}"></script>
+        <script src="{% static 'shoplist/js/components/AuthorRecipe.js' %}"></script>
+        <script src="{% static 'shoplist/authorRecipe.js' %}"></script>
+    {% endif %}
 {% endblock %}
