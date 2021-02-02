@@ -21,7 +21,7 @@
                 </li>
             {% endfor %}
         </ul>
-        <a href="#"><button class="button button_style_blue">Скачать список</button></a>
+        <a href="{% url 'shoplist_generate' %}"><button class="button button_style_blue">Скачать список</button></a>
     </div>
 </main>
 {% endblock %}

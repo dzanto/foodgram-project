@@ -16,7 +16,8 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 from rest_framework import filters
 from django.core.paginator import Paginator
-import json
+from reportlab.pdfgen import canvas
+from django.http import HttpResponse
 
 
 class RecipeListView(ListView):
@@ -176,6 +177,31 @@ class PurchaseListView(ListView):
         return recipes
 
 
+def shoplist_generate(request):
+    recipes = Recipe.objects.filter(purchases__user=request.user)
+    quantities = Quantity.objects.filter(recipe__in=recipes)
+    shoplist = {}
+    for ing in quantities:
+        print(ing.ingredient.title, ing.ingredient.dimension, ing.quantity)
+        if shoplist.get(ing.ingredient.title) is None:
+            shoplist[ing.ingredient.title] = [ing.ingredient.dimension, int(ing.quantity)]
+        else:
+            shoplist[ing.ingredient.title][1] += int(ing.quantity)
+    for key, value in shoplist.items():
+        print(key, value[0], value[1])
+    # print(shoplist.values())
+
+        # shoplist[ing.ingredient.title] = [ing.ingredient.dimension, ing.quantity]
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="shoplist.pdf"'
+    p = canvas.Canvas(response)
+    p.drawString(100, 100, "Hello world.")
+    p.showPage()
+    p.save()
+    return response
+
+
 @csrf_exempt
 @api_view(['POST'])
 def api_favorite(request):
@@ -259,6 +285,9 @@ class IngredientsApiView(generics.ListAPIView):
     filter_backends = (filters.SearchFilter,)
     queryset = Ingredient.objects.all()
     serializer_class = serializers.IngredientSerializer
+
+
+
 
 
 
