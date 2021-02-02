@@ -23,7 +23,7 @@ urlpatterns = [
 
     path("ingredients/", views.IngredientsApiView.as_view(), name="search_ingredients"),
 
-    path("authorrecipe/", views.authorrecipe, name="authorrecipe"),
+    path("recipes/<str:author>", views.recipe_list, name="authorrecipes"),
     path("changepassword/", views.changepassword, name="changepassword"),
     path("custompage/", views.custompage, name="custompage"),
     path("favorite/", views.FavoriteListView.as_view(), name="favorite"),

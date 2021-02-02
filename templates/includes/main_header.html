@@ -9,7 +9,8 @@
                     tags__checkbox
                 {% endif %}
                 "
-               href="{% url 'index' %}?tag=breakfast"></a>
+               href="{{ request.path }}?tag=breakfast"></a>
+
             <span class="tags__label">Завтрак</span>
         </li>
         <li class="tags__item">
@@ -20,7 +21,7 @@
                     tags__checkbox
                 {% endif %}
                 "
-                href="{% url 'index' %}?tag=lunch"></a>
+                href="{{ request.path }}?tag=lunch"></a>
             <span for="lunch" class="tags__label">Обед</span>
         </li>
         <li class="tags__item">
@@ -31,7 +32,7 @@
                     tags__checkbox
                 {% endif %}
                 "
-                href="{% url 'index' %}?tag=dinner"></a>
+                href="{{ request.path }}?tag=dinner"></a>
             <label for="dinner" class="tags__label">Ужин</label>
         </li>
     </ul>

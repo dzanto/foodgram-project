@@ -26,13 +26,17 @@ class RecipeListView(ListView):
     model = Recipe
     template_name = 'indexNotAuth.html'
     paginate_by = 3
+    slug_field = 'author'
 
-    def get_queryset(self):
+    def get_queryset(self, **kwargs):
         tag = self.request.GET.get('tag')
         if tag is None:
             recipes = Recipe.objects.all()
             return recipes
         recipes = Recipe.objects.filter(tags__title__icontains=tag)
+        # author = kwargs['author']
+        # print(author)
+        # recipes = recipes.filter(author__username=author)
         return recipes
 
     def get_context_data(self, **kwargs):
@@ -43,6 +47,23 @@ class RecipeListView(ListView):
             return context
         context['tag'] = tag
         return context
+
+
+def recipe_list(request, author):
+    tag = request.GET.get('tag')
+    if tag is None:
+        recipes = Recipe.objects.filter(author__username=author)
+    else:
+        recipes = Recipe.objects.filter(tags__title__icontains=tag).filter(author__username=author)
+
+    page = request.GET.get('page', 1)
+    paginator = Paginator(recipes, 3)
+    page_obj = paginator.page(page)
+    return render(
+        request,
+        "indexNotAuth.html",
+        {"tag": tag, "page_obj": page_obj}
+    )
 
 
 def new_recipe(request):
