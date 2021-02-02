@@ -17,6 +17,8 @@ from rest_framework.decorators import api_view
 from rest_framework import filters
 from django.core.paginator import Paginator
 from reportlab.pdfgen import canvas
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 from django.http import HttpResponse
 
 
@@ -182,21 +184,19 @@ def shoplist_generate(request):
     quantities = Quantity.objects.filter(recipe__in=recipes)
     shoplist = {}
     for ing in quantities:
-        print(ing.ingredient.title, ing.ingredient.dimension, ing.quantity)
         if shoplist.get(ing.ingredient.title) is None:
             shoplist[ing.ingredient.title] = [ing.ingredient.dimension, int(ing.quantity)]
         else:
             shoplist[ing.ingredient.title][1] += int(ing.quantity)
-    for key, value in shoplist.items():
-        print(key, value[0], value[1])
-    # print(shoplist.values())
-
-        # shoplist[ing.ingredient.title] = [ing.ingredient.dimension, ing.quantity]
-
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="shoplist.pdf"'
     p = canvas.Canvas(response)
-    p.drawString(100, 100, "Hello world.")
+    pdfmetrics.registerFont(TTFont('FreeSans', 'FreeSans.ttf'))
+    p.setFont('FreeSans', 16)
+    y = 700
+    for key, value in shoplist.items():
+        p.drawString(100, y, "{} {} {}".format(key, value[0], value[1]))
+        y -= 20
     p.showPage()
     p.save()
     return response
