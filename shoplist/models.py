@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-from multiselectfield import MultiSelectField
 
 User = get_user_model()
 
