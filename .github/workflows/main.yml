@@ -1,6 +1,9 @@
 name: Foodgram workflow
 
-on: [push]
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   tests:
@@ -21,9 +24,6 @@ jobs:
 
     - name: Lint with flake8
       run: flake8 --ignore E126,W291,W391,F401,F403,F405,E501,F541,W605,F811 .
-
-    - name: Test with pytest
-      run: pytest
 
   build_and_push_to_docker_hub:
     name: Push Docker image to Docker Hub
