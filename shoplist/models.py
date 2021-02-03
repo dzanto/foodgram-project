@@ -24,18 +24,15 @@ class Ingredient(models.Model):
     def __str__(self):
         return self.title
 
-
-TAGS = (
-    ('breakfast', 'Завтрак'),
-    ('lunch', 'Обед'),
-    ('dinner', 'Ужин'),
-)
+    class Meta:
+        verbose_name = 'Ингредиент'
+        verbose_name_plural = 'Ингредиенты'
 
 
 class Tag(models.Model):
-    title = models.CharField('Имя тега', max_length=20, db_index=True, default="lunch")
-    name = models.CharField('Имя тега для шаблона', max_length=20, default="Обед")
-    color = models.CharField('Цвет тега', max_length=20, default="green")
+    title = models.CharField('Имя тега', max_length=20, db_index=True)
+    name = models.CharField('Имя тега для шаблона', max_length=20)
+    color = models.CharField('Цвет тега', max_length=20)
 
     def __str__(self):
         return self.name
@@ -60,19 +57,12 @@ class Recipe(models.Model):
         through='Quantity',
         blank=True,
     )
-    # tag = models.CharField(
-    #     max_length=10,
-    #     choices=TAGS,
-    #     verbose_name='Tag',
-    # )
     tags = models.ManyToManyField(
         Tag,
         related_name='recipes',
         verbose_name='Теги',
     )
-    # tag = MultiSelectField(choices=TAGS)
     time = models.IntegerField(verbose_name='Время приготовления')
-    # slug = models.SlugField()
 
     def __str__(self):
         return self.title
@@ -80,27 +70,65 @@ class Recipe(models.Model):
     def get_absolute_url(self):
         return reverse('recipedetail', args=[str(self.id)])
 
+    class Meta:
+        verbose_name = 'Рецепт'
+        verbose_name_plural = 'Рецепты'
+
 
 class Quantity(models.Model):
-    ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE, related_name='quantities')
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='quantities')
-    quantity = models.IntegerField(verbose_name='Количество')
+    ingredient = models.ForeignKey(
+        Ingredient,
+        on_delete=models.CASCADE,
+        related_name='quantities'
+    )
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE,
+        related_name='quantities'
+    )
+    quantity = models.IntegerField(
+        verbose_name='Количество'
+    )
+
+    class Meta:
+        verbose_name = 'Количество ингредиента'
+        verbose_name_plural = 'Количество ингредиентов'
 
 
 class Follow(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="follower")
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="following")
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="follower"
+    )
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="following"
+    )
 
     class Meta:
         unique_together = ("user", "author")
+        verbose_name = 'Подписка'
+        verbose_name_plural = 'Подписки'
 
 
 class Favorite(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="favorites")
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name="favorites")
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="favorites"
+    )
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE,
+        related_name="favorites"
+    )
 
     class Meta:
         unique_together = ("user", "recipe")
+        verbose_name = 'Избранное'
+        verbose_name_plural = 'Избранное'
 
 
 class Purchase(models.Model):
@@ -109,3 +137,5 @@ class Purchase(models.Model):
 
     class Meta:
         unique_together = ("user", "recipe")
+        verbose_name = 'Покупка'
+        verbose_name_plural = 'Покупки'

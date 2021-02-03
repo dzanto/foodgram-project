@@ -1,15 +1,9 @@
 from django.views.generic.list import ListView
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import DetailView
 from .models import Recipe, User, Favorite, Follow, Ingredient, Quantity, Purchase
-from django.urls import reverse_lazy
 from . import forms, serializers
 from rest_framework import status
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse
-from rest_framework.views import APIView
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import generics
 from django.views.decorators.csrf import csrf_exempt
@@ -50,7 +44,10 @@ def recipe_list(request, author):
     if tag is None:
         recipes = Recipe.objects.filter(author__username=author)
     else:
-        recipes = Recipe.objects.filter(tags__title__icontains=tag).filter(author__username=author)
+        recipes = Recipe.objects.filter(
+            tags__title__icontains=tag).filter(
+            author__username=author
+        )
 
     page = request.GET.get('page', 1)
     paginator = Paginator(recipes, 3)
@@ -103,7 +100,7 @@ def new_recipe(request):
             name_ingredient = request.POST[field]
             value_ingredient = int(request.POST[field.replace('name', 'value')])
             ingredient = Ingredient.objects.get(title=name_ingredient)
-            quantity = Quantity.objects.get_or_create(
+            Quantity.objects.get_or_create(
                 ingredient=ingredient,
                 recipe=recipe,
                 quantity=value_ingredient
@@ -163,10 +160,6 @@ def edit_recipe(request, pk):
 def del_recipe(request, pk):
     get_object_or_404(Recipe, id=pk).delete()
     return redirect("index")
-
-# class RecipeDelView(DeleteView):
-#     model = Recipe
-#     success_url = reverse_lazy('index')
 
 
 class RecipeDetailView(DetailView):
@@ -230,6 +223,21 @@ def shoplist_generate(request):
     p.showPage()
     p.save()
     return response
+
+
+def my_follow(request):
+    users = User.objects.filter(following__user=request.user)
+    paginator = Paginator(users, 1)
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.page(page_number)
+    return render(
+        request,
+        'myFollow.html',
+        {
+            'page_obj': page_obj,
+            'paginator': paginator,
+        }
+    )
 
 
 @csrf_exempt
@@ -315,83 +323,3 @@ class IngredientsApiView(generics.ListAPIView):
     filter_backends = (filters.SearchFilter,)
     queryset = Ingredient.objects.all()
     serializer_class = serializers.IngredientSerializer
-
-
-
-
-
-
-def auth(request):
-    return render(
-        request,
-        'login.html'
-    )
-
-
-def authorrecipe(request):
-    return render(
-        request,
-        'authorRecipe.html'
-    )
-
-
-def changepassword(request):
-    return render(
-        request,
-        'password_change_form.html'
-    )
-
-
-def custompage(request):
-    return render(
-        request,
-        'customPage.html'
-    )
-
-
-
-def formchangerecipe(request):
-    return render(
-        request,
-        'formChangeRecipe.html'
-    )
-
-
-def my_follow(request):
-    users = User.objects.filter(following__user=request.user)
-    paginator = Paginator(users, 1)
-    page_number = request.GET.get('page', 1)
-    page_obj = paginator.page(page_number)
-    return render(
-        request,
-        'myFollow.html',
-        {
-            'page_obj': page_obj,
-            'paginator': paginator,
-        }
-    )
-
-
-
-def reg(request):
-    return render(
-        request,
-        'reg.html'
-    )
-
-
-def resetpassword(request):
-    return render(
-        request,
-        'password_reset_form.html'
-    )
-
-
-def singlepage(request):
-    return render(
-        request,
-        'singlePage.html'
-    )
-
-
-

@@ -1,18 +1,22 @@
 from django.contrib import admin
-from .models import Ingredient, Recipe, Tag, Favorite, Follow, Quantity, Purchase
+from . import models
 
 
-# class ShoplistAdmin(admin.ModelAdmin):
-#     list_display = ("text", "pub_date", "author")
-#     search_fields = ("text",)
-#     list_filter = ("pub_date",)
-#     empty_value_display = "-пусто-"
+@admin.register(models.Recipe)
+class RecipeAdmin(admin.ModelAdmin):
+    list_display = ("title",)
+    search_fields = ("title",)
+    list_filter = ("tags",)
 
 
-admin.site.register(Ingredient)
-admin.site.register(Recipe)
-admin.site.register(Tag)
-admin.site.register(Favorite)
-admin.site.register(Follow)
-admin.site.register(Quantity)
-admin.site.register(Purchase)
+@admin.register(models.Ingredient)
+class RecipeAdmin(admin.ModelAdmin):
+    list_display = ("title",)
+    search_fields = ("title",)
+
+
+admin.site.register(models.Tag)
+admin.site.register(models.Favorite)
+admin.site.register(models.Follow)
+admin.site.register(models.Quantity)
+admin.site.register(models.Purchase)
