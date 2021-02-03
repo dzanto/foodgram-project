@@ -18,7 +18,7 @@ User.add_to_class("__str__", get_user_name)
 
 class Ingredient(models.Model):
     title = models.CharField(max_length=200, verbose_name='Наименование')
-    dimension = models.CharField(max_length=5, verbose_name='Ед.изм.')
+    dimension = models.CharField(max_length=5, verbose_name='Ед.изм')
 
     def __str__(self):
         return self.title
