@@ -149,7 +149,7 @@ def edit_recipe(request, pk):
             value_ingredient = int(request.POST[field.replace('name', 'value')])
             print(name_ingredient, value_ingredient)
             ingredient = Ingredient.objects.get(title=name_ingredient)
-            quantity = Quantity.objects.get_or_create(
+            Quantity.objects.get_or_create(
                 ingredient=ingredient,
                 recipe=recipe,
                 quantity=value_ingredient

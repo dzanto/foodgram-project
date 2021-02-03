@@ -160,7 +160,7 @@ REST_FRAMEWORK = {
     ],
 }
 
-APPEND_SLASH=False
+APPEND_SLASH = False
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
