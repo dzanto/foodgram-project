@@ -7,3 +7,5 @@ register = template.Library()
 @register.filter
 def is_purch_by(recipe, user):
     return recipe.purchases.filter(user=user).exists()
+
+

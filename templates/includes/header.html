@@ -18,7 +18,7 @@
             <ul class="nav__items list">
                 {% if user.is_authenticated %}
                     {% url 'changepassword' as current_url %}
-                    <li class="nav__item {% if current_url == request.path %} nav__item_active {% endif %}"><a href="{% url 'changepassword' %}" class="nav__link link">Изменить пароль</a></li>
+                    <li class="nav__item {% if current_url == request.path %} nav__item_active {% endif %}"><a href="{% url 'password_change' %}" class="nav__link link">Изменить пароль</a></li>
                     {% url 'logout' as current_url %}
                     <li class="nav__item {% if current_url == request.path %} nav__item_active {% endif %}"><a href="{% url 'logout' %}" class="nav__link link">Выход</a></li>
                     {% else %}

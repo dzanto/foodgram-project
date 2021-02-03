@@ -55,10 +55,23 @@ def recipe_list(request, author):
     page = request.GET.get('page', 1)
     paginator = Paginator(recipes, 3)
     page_obj = paginator.page(page)
+
+    follow = False
+    if request.user.is_authenticated:
+        follow = Follow.objects.filter(
+            author__username=author).filter(
+            user=request.user).exists()
+
     return render(
         request,
         "indexNotAuth.html",
-        {"tag": tag, "page_obj": page_obj, "author": recipe_author}
+        {
+            "tag": tag,
+            "page_obj": page_obj,
+            "paginator": paginator,
+            "author": recipe_author,
+            "follow": follow
+        }
     )
 
 
