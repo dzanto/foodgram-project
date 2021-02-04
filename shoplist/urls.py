@@ -11,7 +11,7 @@ urlpatterns = [
     path("recipes/<int:pk>/del/", views.del_recipe, name='recipedel'),
     path("shoplist/", views.PurchaseListView.as_view(), name="shoplist"),
     path("shoplist/get/", views.shoplist_generate, name="shoplist_generate"),
-    path("recipes/<str:author>", views.recipe_list, name="authorrecipes"),
+    path("recipes/<str:author>", views.authors_recipes, name="authorrecipes"),
     path("favorite/", views.FavoriteListView.as_view(), name="favorite"),
     path("myfollow/", views.my_follow, name="myfollow"),
 

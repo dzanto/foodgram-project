@@ -47,7 +47,7 @@ class RecipeListView(ListView):
         return context
 
 
-def recipe_list(request, author):
+def authors_recipes(request, author):
     recipe_author = get_object_or_404(User, username=author)
     tag = request.GET.get('tag')
     if tag is None:
@@ -76,7 +76,7 @@ def recipe_list(request, author):
             "page_obj": page_obj,
             "paginator": paginator,
             "author": recipe_author,
-            "follow": follow
+            "follow": follow,
         }
     )
 

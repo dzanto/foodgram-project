@@ -6,14 +6,16 @@
     <main class="main container">
         {% include "includes/main_header.html" %}
         {% if user.is_authenticated %}
-            {% if author %}
-                <div class="author-subscribe" data-author="{{author.username}}">
-                    {% if follow %}
-                        <p style="padding: 0 0 2em 0;"><button class="button button_style_light-blue button_size_subscribe button_style_blue" name="subscribe">Отписаться от автора</button></p>
-                    {% else %}
-                        <p style="padding: 0 0 2em 0;"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>Подписаться на автора</button></p>
-                    {% endif %}
-                </div>
+            {% if author != user %}
+                {% if author %}
+                    <div class="author-subscribe" data-author="{{author.username}}">
+                        {% if follow %}
+                            <p style="padding: 0 0 2em 0;"><button class="button button_style_light-blue button_size_subscribe button_style_blue" name="subscribe">Отписаться от автора</button></p>
+                        {% else %}
+                            <p style="padding: 0 0 2em 0;"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>Подписаться на автора</button></p>
+                        {% endif %}
+                    </div>
+                {% endif %}
             {% endif %}
         {% endif %}
         {% include "includes/card_list.html" %}
