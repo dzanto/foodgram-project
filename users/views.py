@@ -7,4 +7,4 @@ from django.contrib.auth.views import LoginView
 class SignUp(CreateView):
     form_class = CreationForm
     success_url = reverse_lazy("login")
-    template_name = "regNew.html"
+    template_name = "registration/signup.html"

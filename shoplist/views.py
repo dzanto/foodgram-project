@@ -26,7 +26,7 @@ from django.http import HttpResponse
 
 class RecipeListView(ListView):
     model = Recipe
-    template_name = 'indexNotAuth.html'
+    template_name = 'index.html'
     paginate_by = 3
 
     def get_queryset(self, **kwargs):
@@ -69,7 +69,7 @@ def recipe_list(request, author):
 
     return render(
         request,
-        "indexNotAuth.html",
+        "index.html",
         {
             "tag": tag,
             "page_obj": page_obj,
@@ -92,14 +92,14 @@ def new_recipe(request):
         form = forms.RecipeForm()
         return render(
             request,
-            "formRecipe.html",
+            "form-recipe.html",
             {"form": form, "labels": labels}
         )
 
     form = forms.RecipeForm(request.POST, request.FILES)
 
     if not form.is_valid():
-        return render(request, "formRecipe.html",
+        return render(request, "form-recipe.html",
                       {"form": form, "labels": labels})
 
     recipe = form.save(commit=False)
@@ -139,13 +139,13 @@ def edit_recipe(request, pk):
     if request.method != "POST":
         return render(
             request,
-            "formRecipe.html",
+            "form-recipe.html",
             {"form": form, "ingredients": ingredients, "labels": labels})
 
     if not form.is_valid():
         return render(
             request,
-            "formRecipe.html",
+            "form-recipe.html",
             {"form": form, "labels": labels}
         )
 
@@ -176,7 +176,7 @@ def del_recipe(request, pk):
 
 class RecipeDetailView(DetailView):
     model = Recipe
-    template_name = 'singlePage.html'
+    template_name = 'single-recipe.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -197,7 +197,7 @@ class RecipeDetailView(DetailView):
 
 class FavoriteListView(ListView):
     model = Recipe
-    template_name = 'favorite.html'
+    template_name = 'favorite-recipes.html'
     paginate_by = 3
 
     def get_queryset(self):
@@ -207,7 +207,7 @@ class FavoriteListView(ListView):
 
 class PurchaseListView(ListView):
     model = Recipe
-    template_name = 'shopList.html'
+    template_name = 'shop-list.html'
 
     def get_queryset(self):
         recipes = Recipe.objects.filter(purchases__user=self.request.user)
@@ -247,7 +247,7 @@ def my_follow(request):
     page_obj = paginator.page(page_number)
     return render(
         request,
-        'myFollow.html',
+        'my-follows.html',
         {
             'page_obj': page_obj,
             'paginator': paginator,
