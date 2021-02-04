@@ -248,9 +248,9 @@ def shoplist_generate(request):
 @login_required
 def my_follow(request):
     users = User.objects.filter(following__user=request.user)
-    paginator = Paginator(users, 1)
-    page_number = request.GET.get('page', 1)
-    page_obj = paginator.page(page_number)
+    paginator = Paginator(users, 3)
+    page = request.GET.get('page', 1)
+    page_obj = paginator.page(page)
     return render(
         request,
         'my-follows.html',
