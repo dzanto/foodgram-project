@@ -19,6 +19,7 @@ services:
     restart: always
     volumes:
       - static_volume:/code/static
+      - media_volume:/code/media
     expose:
       - 8000
     depends_on:
