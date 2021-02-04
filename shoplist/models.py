@@ -131,8 +131,16 @@ class Favorite(models.Model):
 
 
 class Purchase(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="purchases")
-    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name="purchases")
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="purchases"
+    )
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE,
+        related_name="purchases"
+    )
 
     class Meta:
         unique_together = ("user", "recipe")

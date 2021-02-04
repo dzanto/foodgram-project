@@ -1,6 +1,14 @@
 from django.views.generic.list import ListView
 from django.views.generic import DetailView
-from .models import Recipe, User, Favorite, Follow, Ingredient, Quantity, Purchase
+from .models import (
+    Recipe,
+    User,
+    Favorite,
+    Follow,
+    Ingredient,
+    Quantity,
+    Purchase
+)
 from . import forms, serializers
 from rest_framework import status
 from django.shortcuts import render, get_object_or_404, redirect
@@ -82,7 +90,11 @@ def new_recipe(request):
 
     if request.method != "POST":
         form = forms.RecipeForm()
-        return render(request, "formRecipe.html", {"form": form, "labels": labels})
+        return render(
+            request,
+            "formRecipe.html",
+            {"form": form, "labels": labels}
+        )
 
     form = forms.RecipeForm(request.POST, request.FILES)
 
@@ -208,7 +220,10 @@ def shoplist_generate(request):
     shoplist = {}
     for ing in quantities:
         if shoplist.get(ing.ingredient.title) is None:
-            shoplist[ing.ingredient.title] = [ing.ingredient.dimension, int(ing.quantity)]
+            shoplist[ing.ingredient.title] = [
+                ing.ingredient.dimension,
+                int(ing.quantity)
+            ]
         else:
             shoplist[ing.ingredient.title][1] += int(ing.quantity)
     response = HttpResponse(content_type='application/pdf')
