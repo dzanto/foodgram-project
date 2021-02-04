@@ -27,7 +27,7 @@
                             </li>
                             {% endfor %}
                         <li class="card-user__item">
-                            <a href="#" class="card-user__link link">
+                            <a href="{% url 'authorrecipes' user.username %}" class="card-user__link link">
                                 {% if user.recipes.all.count|add:"-2" < 1 %}
                                     Больше рецептов нет
                                 {% else %}
