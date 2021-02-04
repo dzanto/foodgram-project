@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.views.generic.list import ListView
 from django.views.generic import DetailView
 from .models import (
@@ -80,6 +81,7 @@ def recipe_list(request, author):
     )
 
 
+@login_required
 def new_recipe(request):
 
     labels = {
@@ -120,6 +122,7 @@ def new_recipe(request):
     return redirect("index")
 
 
+@login_required
 def edit_recipe(request, pk):
 
     recipe = get_object_or_404(Recipe, id=pk)
@@ -169,6 +172,7 @@ def edit_recipe(request, pk):
     return redirect("index")
 
 
+@login_required
 def del_recipe(request, pk):
     get_object_or_404(Recipe, id=pk).delete()
     return redirect("index")
@@ -214,6 +218,7 @@ class PurchaseListView(ListView):
         return recipes
 
 
+@login_required
 def shoplist_generate(request):
     recipes = Recipe.objects.filter(purchases__user=request.user)
     quantities = Quantity.objects.filter(recipe__in=recipes)
@@ -240,6 +245,7 @@ def shoplist_generate(request):
     return response
 
 
+@login_required
 def my_follow(request):
     users = User.objects.filter(following__user=request.user)
     paginator = Paginator(users, 1)
