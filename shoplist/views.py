@@ -8,7 +8,8 @@ from .models import (
     Follow,
     Ingredient,
     Quantity,
-    Purchase
+    Purchase,
+    Tag
 )
 from . import forms, serializers
 from rest_framework import status
@@ -23,6 +24,7 @@ from reportlab.pdfgen import canvas
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from django.http import HttpResponse
+from django.db.models import Prefetch
 
 
 class RecipeListView(ListView):
@@ -33,13 +35,15 @@ class RecipeListView(ListView):
     def get_queryset(self, **kwargs):
         tag = self.request.GET.get('tag')
         if tag is None:
-            recipes = Recipe.objects.all()
+            recipes = Recipe.objects.prefetch_related('tags')
             return recipes
-        recipes = Recipe.objects.filter(tags__title__icontains=tag)
+        recipes = Recipe.objects.prefetch_related(
+            Prefetch('tags', queryset=Tag.objects.filter(title__icontains=tag)))
         return recipes
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user
         tag = self.request.GET.get('tag')
         if tag is None:
             return context
@@ -51,12 +55,14 @@ def authors_recipes(request, author):
     recipe_author = get_object_or_404(User, username=author)
     tag = request.GET.get('tag')
     if tag is None:
-        recipes = Recipe.objects.filter(author__username=author)
+        recipes = Recipe.objects.prefetch_related(
+            'tags').filter(author=recipe_author)
     else:
-        recipes = Recipe.objects.filter(
-            tags__title__icontains=tag).filter(
-            author__username=author
-        )
+        recipes = Recipe.objects.prefetch_related(
+            Prefetch(
+                'tags',
+                queryset=Tag.objects.filter(title__icontains=tag))
+        ).filter(author=recipe_author)
 
     page = request.GET.get('page', 1)
     paginator = Paginator(recipes, 3)
