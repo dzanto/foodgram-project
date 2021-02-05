@@ -25,7 +25,6 @@ from .models import (
     Ingredient,
     Quantity,
     Purchase,
-    Tag
 )
 
 from foodgram.settings import PAGINATE_BY
@@ -41,8 +40,8 @@ class RecipeListView(ListView):
         if tag is None:
             recipes = Recipe.objects.prefetch_related('tags')
             return recipes
-        recipes = Recipe.objects.prefetch_related(
-            Prefetch('tags', queryset=Tag.objects.filter(title__icontains=tag)))
+        recipes = Recipe.objects.prefetch_related('tags')
+        recipes = recipes.filter(tags__title__icontains=tag)
         return recipes
 
     def get_context_data(self, **kwargs):
@@ -62,11 +61,8 @@ def authors_recipes(request, author):
         recipes = Recipe.objects.prefetch_related(
             'tags').filter(author=recipe_author)
     else:
-        recipes = Recipe.objects.prefetch_related(
-            Prefetch(
-                'tags',
-                queryset=Tag.objects.filter(title__icontains=tag))
-        ).filter(author=recipe_author)
+        recipes = Recipe.objects.prefetch_related('tags')
+        recipes = recipes.filter(tags__title__icontains=tag, author=recipe_author)
 
     page = request.GET.get('page', 1)
     paginator = Paginator(recipes, PAGINATE_BY)
