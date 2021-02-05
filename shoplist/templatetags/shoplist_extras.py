@@ -1,4 +1,5 @@
 from django import template
+
 from shoplist.models import Purchase
 
 register = template.Library()

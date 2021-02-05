@@ -1,6 +1,22 @@
+from django.http import HttpResponse
+from django.shortcuts import render, get_object_or_404, redirect
+
+from django.db.models import Prefetch
+from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
-from django.views.generic.list import ListView
-from django.views.generic import DetailView
+
+from django.views.generic import DetailView, ListView
+from django.views.decorators.csrf import csrf_exempt
+
+from rest_framework import filters, status, generics
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+
+from reportlab.pdfgen import canvas
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
+
+from . import forms, serializers
 from .models import (
     Recipe,
     User,
@@ -11,26 +27,14 @@ from .models import (
     Purchase,
     Tag
 )
-from . import forms, serializers
-from rest_framework import status
-from django.shortcuts import render, get_object_or_404, redirect
-from rest_framework.response import Response
-from rest_framework import generics
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework.decorators import api_view
-from rest_framework import filters
-from django.core.paginator import Paginator
-from reportlab.pdfgen import canvas
-from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.ttfonts import TTFont
-from django.http import HttpResponse
-from django.db.models import Prefetch
+
+from foodgram.settings import PAGINATE_BY
 
 
 class RecipeListView(ListView):
     model = Recipe
     template_name = 'index.html'
-    paginate_by = 3
+    paginate_by = PAGINATE_BY
 
     def get_queryset(self, **kwargs):
         tag = self.request.GET.get('tag')
@@ -65,7 +69,7 @@ def authors_recipes(request, author):
         ).filter(author=recipe_author)
 
     page = request.GET.get('page', 1)
-    paginator = Paginator(recipes, 3)
+    paginator = Paginator(recipes, PAGINATE_BY)
     page_obj = paginator.page(page)
 
     follow = False
@@ -76,13 +80,13 @@ def authors_recipes(request, author):
 
     return render(
         request,
-        "index.html",
+        'index.html',
         {
-            "tag": tag,
-            "page_obj": page_obj,
-            "paginator": paginator,
-            "author": recipe_author,
-            "follow": follow,
+            'tag': tag,
+            'page_obj': page_obj,
+            'paginator': paginator,
+            'author': recipe_author,
+            'follow': follow,
         }
     )
 
@@ -91,24 +95,24 @@ def authors_recipes(request, author):
 def new_recipe(request):
 
     labels = {
-        "main_title": "Создание рецепта",
-        "button": "Создать рецепт",
-        "del_button": False
+        'main_title': 'Создание рецепта',
+        'button': 'Создать рецепт',
+        'del_button': False
     }
 
-    if request.method != "POST":
+    if request.method != 'POST':
         form = forms.RecipeForm()
         return render(
             request,
-            "form-recipe.html",
-            {"form": form, "labels": labels}
+            'form-recipe.html',
+            {'form': form, 'labels': labels}
         )
 
     form = forms.RecipeForm(request.POST, request.FILES)
 
     if not form.is_valid():
-        return render(request, "form-recipe.html",
-                      {"form": form, "labels": labels})
+        return render(request, 'form-recipe.html',
+                      {'form': form, 'labels': labels})
 
     recipe = form.save(commit=False)
     recipe.author = request.user
@@ -125,7 +129,7 @@ def new_recipe(request):
                 recipe=recipe,
                 quantity=value_ingredient
             )
-    return redirect("index")
+    return redirect('index')
 
 
 @login_required
@@ -139,23 +143,23 @@ def edit_recipe(request, pk):
     )
     ingredients = Quantity.objects.filter(recipe=recipe)
     labels = {
-        "main_title": "Редактирование рецепта",
-        "button": "Сохранить",
-        "del_button": True,
-        "recipe": recipe
+        'main_title': 'Редактирование рецепта',
+        'button': 'Сохранить',
+        'del_button': True,
+        'recipe': recipe
     }
 
-    if request.method != "POST":
+    if request.method != 'POST':
         return render(
             request,
-            "form-recipe.html",
-            {"form": form, "ingredients": ingredients, "labels": labels})
+            'form-recipe.html',
+            {'form': form, 'ingredients': ingredients, 'labels': labels})
 
     if not form.is_valid():
         return render(
             request,
-            "form-recipe.html",
-            {"form": form, "labels": labels}
+            'form-recipe.html',
+            {'form': form, 'labels': labels}
         )
 
     recipe = form.save(commit=False)
@@ -164,24 +168,22 @@ def edit_recipe(request, pk):
     form.save_m2m()
 
     for field in request.POST:
-        print(field)
         if 'nameIngredient' in field:
             name_ingredient = request.POST[field]
             value_ingredient = int(request.POST[field.replace('name', 'value')])
-            print(name_ingredient, value_ingredient)
             ingredient = Ingredient.objects.get(title=name_ingredient)
             Quantity.objects.get_or_create(
                 ingredient=ingredient,
                 recipe=recipe,
                 quantity=value_ingredient
             )
-    return redirect("index")
+    return redirect('index')
 
 
 @login_required
 def del_recipe(request, pk):
     get_object_or_404(Recipe, id=pk).delete()
-    return redirect("index")
+    return redirect('index')
 
 
 class RecipeDetailView(DetailView):
@@ -208,7 +210,7 @@ class RecipeDetailView(DetailView):
 class FavoriteListView(ListView):
     model = Recipe
     template_name = 'favorite-recipes.html'
-    paginate_by = 3
+    paginate_by = PAGINATE_BY
 
     def get_queryset(self):
         recipes = Recipe.objects.filter(favorites__user=self.request.user)
@@ -254,7 +256,7 @@ def shoplist_generate(request):
 @login_required
 def my_follow(request):
     users = User.objects.filter(following__user=request.user)
-    paginator = Paginator(users, 3)
+    paginator = Paginator(users, PAGINATE_BY)
     page = request.GET.get('page', 1)
     page_obj = paginator.page(page)
     return render(
@@ -265,6 +267,14 @@ def my_follow(request):
             'paginator': paginator,
         }
     )
+
+
+def about(request):
+    return render(request, 'about.html')
+
+
+def features(request):
+    return render(request, 'features.html')
 
 
 @csrf_exempt
@@ -285,7 +295,7 @@ def api_favorite(request):
 def del_favorite(request, pk):
     recipe = Recipe.objects.get(id=pk)
     Favorite.objects.filter(user=request.user, recipe=recipe).delete()
-    data = {"success": True}
+    data = {'success': True}
     return Response(data, status=status.HTTP_200_OK)
 
 
@@ -307,7 +317,7 @@ def add_purchase(request):
 def del_purchase(request, pk):
     recipe = Recipe.objects.get(id=pk)
     Purchase.objects.filter(user=request.user, recipe=recipe).delete()
-    data = {"success": True}
+    data = {'success': True}
     return Response(data, status=status.HTTP_200_OK)
 
 
@@ -330,18 +340,16 @@ def add_follow(request):
 def del_follow(request, author):
     author = User.objects.get(username=author)
     Follow.objects.filter(user=request.user, author=author).delete()
-    data = {"success": True}
+    data = {'success': True}
     return Response(data, status=status.HTTP_200_OK)
 
 
 @csrf_exempt
 @api_view(['DELETE'])
 def del_follow_pk(request, pk):
-    print(pk)
     author = User.objects.get(id=pk)
-    print(author)
     Follow.objects.filter(user=request.user, author=author).delete()
-    data = {"success": True}
+    data = {'success': True}
     return Response(data, status=status.HTTP_200_OK)
 
 

@@ -94,7 +94,7 @@
             <div class="form__footer">
                 <button type="submit" class="button button_style_blue">{{ labels.button }}</button>
                 {% if labels.del_button %}
-                    <a style="margin-left: 2.5em" href="{{labels.recipe.get_absolute_url}}del/" class="form__ingredient-link">Удалить</a>
+                    <a style="margin-left: 2.5em" href="{{ labels.recipe.get_absolute_url }}del/" class="form__ingredient-link">Удалить</a>
                 {% endif %}
             </div>
         </form>
