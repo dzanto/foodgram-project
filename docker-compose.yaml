@@ -31,6 +31,7 @@ services:
     image: nginx:1.19.5-alpine
     volumes:
       - static_volume:/code/static
+      - media_volume:/code/media
       - ./nginx:/etc/nginx/conf.d
     ports:
       - 80:80
