@@ -1,8 +1,9 @@
+{% load shoplist_extras %}
 <nav class="pagination" aria-label="Search results pages">
     <ul class="pagination__container">
         {% if page_obj.has_previous %}
             <li class="pagination__item">
-                <a class="pagination__link link"href="?page={{ page_obj.previous_page_number }}{% if tag %}&tag={{tag}}{% endif %}"><span class="icon-left"></span>
+                <a class="pagination__link link"href="?page={{ page_obj.previous_page_number }}{% if tags %}&{{ request|parse_tags }}{% endif %}"><span class="icon-left"></span>
                 </a>
             </li>
         {% endif %}
@@ -10,11 +11,11 @@
         {% for i in paginator.page_range %}
             {% if page_obj.number == i %}
         <li class="pagination__item pagination__item_active">
-            <a class="pagination__link link" href="?page={{ i }}{% if tag %}&tag={{tag}}{% endif %}">{{ i }}</a>
+            <a class="pagination__link link" href="?page={{ i }}{% if tags %}&{{ request|parse_tags }}{% endif %}">{{ i }}</a>
         </li>
             {% else %}
         <li class="pagination__item">
-            <a class="pagination__link link" href="?page={{ i }}{% if tag %}&tag={{tag}}{% endif %}">{{ i }}</a>
+            <a class="pagination__link link" href="?page={{ i }}{% if tags %}&{{ request|parse_tags }}{% endif %}">{{ i }}</a>
         </li>
             {% endif %}
         {% endfor %}

@@ -3,9 +3,9 @@
 <div class="card-list">
     {% for recipe in page_obj %}
     <div class="card" data-id="{{ recipe.id }}">
-        <a href="{{ recipe.get_absolute_url }}" class="link" target="_blank"><img src="/media/{{ recipe.image }}" alt="{{ recipe.title }}" class="card__image"></a>
+        <a href="{{ recipe.get_absolute_url }}" class="link"><img src="/media/{{ recipe.image }}" alt="{{ recipe.title }}" class="card__image"></a>
         <div class="card__body">
-            <a class="card__title link" href="{{ recipe.get_absolute_url }}" target="_blank">{{ recipe.title }}</a>
+            <a class="card__title link" href="{{ recipe.get_absolute_url }}">{{ recipe.title }}</a>
             <ul class="card__items">
                 {% for tag in recipe.tags.all %}
                         <li class="card__item"><span class="badge badge_style_{{tag.color}}"> {{tag.name}} </span></li>

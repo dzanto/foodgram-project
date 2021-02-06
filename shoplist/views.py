@@ -37,34 +37,35 @@ class RecipeListView(ListView):
     paginate_by = PAGINATE_BY
 
     def get_queryset(self, **kwargs):
-        tag = self.request.GET.get('tag')
-        if tag is None:
+        tags = self.request.GET.getlist('tag')
+        if tags == []:
             recipes = Recipe.objects.prefetch_related('tags')
             return recipes
         recipes = Recipe.objects.prefetch_related('tags')
-        recipes = recipes.filter(tags__title__icontains=tag)
+        recipes = recipes.filter(tags__title__in=tags).distinct()
         return recipes
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['user'] = self.request.user
         context['all_tags'] = Tag.objects.all()
-        tag = self.request.GET.get('tag')
-        if tag is None:
+        tags = self.request.GET.getlist('tag')
+        if tags == []:
             return context
-        context['tags'] = tag
+        context['tags'] = tags
         return context
 
 
 def authors_recipes(request, author):
     recipe_author = get_object_or_404(User, username=author)
-    tag = request.GET.get('tag')
-    if tag is None:
+    all_tags = Tag.objects.all()
+    tags = request.GET.getlist('tag')
+    if tags == []:
         recipes = Recipe.objects.prefetch_related(
             'tags').filter(author=recipe_author)
     else:
         recipes = Recipe.objects.prefetch_related('tags')
-        recipes = recipes.filter(tags__title__icontains=tag, author=recipe_author)
+        recipes = recipes.filter(tags__title__in=tags, author=recipe_author).distinct()
 
     page = request.GET.get('page', 1)
     paginator = Paginator(recipes, PAGINATE_BY)
@@ -80,11 +81,12 @@ def authors_recipes(request, author):
         request,
         'index.html',
         {
-            'tag': tag,
+            'tags': tags,
             'page_obj': page_obj,
             'paginator': paginator,
             'author': recipe_author,
             'follow': follow,
+            'all_tags': all_tags,
         }
     )
 
@@ -214,6 +216,11 @@ class FavoriteListView(ListView):
         recipes = Recipe.objects.filter(favorites__user=self.request.user)
         return recipes
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['all_tags'] = Tag.objects.all()
+        return context
+
 
 class PurchaseListView(ListView):
     model = Recipe
@@ -244,7 +251,7 @@ def shoplist_generate(request):
     p.setFont('FreeSans', 16)
     y = 700
     for key, value in shoplist.items():
-        p.drawString(100, y, "{} {} {}".format(key, value[0], value[1]))
+        p.drawString(100, y, '{} {} {}'.format(key, value[0], value[1]))
         y -= 20
     p.showPage()
     p.save()
