@@ -16,8 +16,28 @@ class RecipeAdmin(admin.ModelAdmin):
     search_fields = ("title",)
 
 
+@admin.register(models.Favorite)
+class FavoriteAdmin(admin.ModelAdmin):
+    list_display = ("recipe", "user")
+    search_fields = ("recipe", "user")
+
+
+@admin.register(models.Quantity)
+class QuantityAdmin(admin.ModelAdmin):
+    list_display = ("recipe", "ingredient", "quantity")
+    search_fields = ("ingredient", "recipe")
+
+
+@admin.register(models.Follow)
+class FollowAdmin(admin.ModelAdmin):
+    list_display = ("author", "user")
+    search_fields = ("author", "user")
+
+
+@admin.register(models.Purchase)
+class PurchaseAdmin(admin.ModelAdmin):
+    list_display = ("recipe", "user")
+    search_fields = ("recipe", "user")
+
+
 admin.site.register(models.Tag)
-admin.site.register(models.Favorite)
-admin.site.register(models.Follow)
-admin.site.register(models.Quantity)
-admin.site.register(models.Purchase)

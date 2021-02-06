@@ -50,7 +50,7 @@ class Recipe(models.Model):
         on_delete=models.CASCADE,
         related_name='recipes',
     )
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=100, verbose_name='Рецепт')
     image = models.ImageField(upload_to='recipe/')
     description = models.TextField()
     ingredients = models.ManyToManyField(
@@ -85,12 +85,14 @@ class Quantity(models.Model):
     ingredient = models.ForeignKey(
         Ingredient,
         on_delete=models.CASCADE,
-        related_name='quantities'
+        related_name='quantities',
+        verbose_name='Ингредиент',
     )
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name='quantities'
+        related_name='quantities',
+        verbose_name='Рецепт',
     )
     quantity = models.IntegerField(
         verbose_name='Количество'
@@ -105,12 +107,14 @@ class Follow(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='follower'
+        related_name='follower',
+        verbose_name='Подписчик'
     )
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='following'
+        related_name='following',
+        verbose_name='Автор рецептов'
     )
 
     class Meta:
@@ -127,12 +131,14 @@ class Favorite(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='favorites'
+        related_name='favorites',
+        verbose_name='Пользователь',
     )
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name='favorites'
+        related_name='favorites',
+        verbose_name='Рецепт',
     )
 
     class Meta:
@@ -149,12 +155,14 @@ class Purchase(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='purchases'
+        related_name='purchases',
+        verbose_name='Пользователь',
     )
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name='purchases'
+        related_name='purchases',
+        verbose_name='Рецепт',
     )
 
     class Meta:
