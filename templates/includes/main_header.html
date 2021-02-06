@@ -1,3 +1,4 @@
+{% load shoplist_extras %}
 <div class="main__header">
     <h1 class="main__title">
         {% if author == user %}
@@ -7,39 +8,18 @@
         {% endif %}
     </h1>
     <ul class="tags">
-        <li class="tags__item">
-            <a id="breakfast" class="tags__checkbox tags__checkbox_style_orange
-                {% if 'breakfast' in tag %}
-                    tags__checkbox_active
-                {% else %}
-                    tags__checkbox
-                {% endif %}
-                "
-               href="{{ request.path }}?tag=breakfast"></a>
-
-            <span class="tags__label">Завтрак</span>
-        </li>
-        <li class="tags__item">
-            <a id="lunch" class="tags__checkbox tags__checkbox_style_green
-                {% if 'lunch' in tag %}
-                    tags__checkbox_active
-                {% else %}
-                    tags__checkbox
-                {% endif %}
-                "
-                href="{{ request.path }}?tag=lunch"></a>
-            <span for="lunch" class="tags__label">Обед</span>
-        </li>
-        <li class="tags__item">
-            <a id="dinner" class="tags__checkbox tags__checkbox_style_purple
-                {% if 'dinner' in tag %}
-                    tags__checkbox_active
-                {% else %}
-                    tags__checkbox
-                {% endif %}
-                "
-                href="{{ request.path }}?tag=dinner"></a>
-            <label for="dinner" class="tags__label">Ужин</label>
-        </li>
+        {% for tag in all_tags %}
+            <li class="tags__item">
+                <a id="{{ tag.title }}" class="tags__checkbox tags__checkbox_style_{{ tag.color }}
+                    {% if tag.title in tags %}
+                        tags__checkbox_active
+                    {% else %}
+                        tags__checkbox
+                    {% endif %}
+                    "
+                   href="{{ request.path }}?tag={{ tag.title }}"></a>
+                <span class="tags__label">{{ tag.name }}</span>
+            </li>
+        {% endfor %}
     </ul>
 </div>

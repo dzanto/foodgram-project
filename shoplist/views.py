@@ -1,12 +1,10 @@
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 
-from django.db.models import Prefetch
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 
 from django.views.generic import DetailView, ListView
-from django.views.decorators.csrf import csrf_exempt
 
 from rest_framework import filters, status, generics
 from rest_framework.response import Response
@@ -25,9 +23,12 @@ from .models import (
     Ingredient,
     Quantity,
     Purchase,
+    Tag,
 )
 
 from foodgram.settings import PAGINATE_BY
+
+SUCCESS_TRUE = {'success': True}
 
 
 class RecipeListView(ListView):
@@ -47,10 +48,11 @@ class RecipeListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['user'] = self.request.user
+        context['all_tags'] = Tag.objects.all()
         tag = self.request.GET.get('tag')
         if tag is None:
             return context
-        context['tag'] = tag
+        context['tags'] = tag
         return context
 
 
@@ -273,7 +275,6 @@ def features(request):
     return render(request, 'features.html')
 
 
-@csrf_exempt
 @api_view(['POST'])
 def api_favorite(request):
     id = int(request.data['id'])
@@ -286,16 +287,14 @@ def api_favorite(request):
                     status=status.HTTP_400_BAD_REQUEST)
 
 
-@csrf_exempt
 @api_view(['DELETE'])
 def del_favorite(request, pk):
     recipe = Recipe.objects.get(id=pk)
     Favorite.objects.filter(user=request.user, recipe=recipe).delete()
-    data = {'success': True}
+    data = SUCCESS_TRUE
     return Response(data, status=status.HTTP_200_OK)
 
 
-@csrf_exempt
 @api_view(['POST'])
 def add_purchase(request):
     id = int(request.data['id'])
@@ -308,16 +307,14 @@ def add_purchase(request):
                     status=status.HTTP_400_BAD_REQUEST)
 
 
-@csrf_exempt
 @api_view(['DELETE'])
 def del_purchase(request, pk):
     recipe = Recipe.objects.get(id=pk)
     Purchase.objects.filter(user=request.user, recipe=recipe).delete()
-    data = {'success': True}
+    data = SUCCESS_TRUE
     return Response(data, status=status.HTTP_200_OK)
 
 
-@csrf_exempt
 @api_view(['POST'])
 def add_follow(request):
     author_name = request.data['id']
@@ -331,21 +328,19 @@ def add_follow(request):
                     status=status.HTTP_400_BAD_REQUEST)
 
 
-@csrf_exempt
 @api_view(['DELETE'])
 def del_follow(request, author):
     author = User.objects.get(username=author)
     Follow.objects.filter(user=request.user, author=author).delete()
-    data = {'success': True}
+    data = SUCCESS_TRUE
     return Response(data, status=status.HTTP_200_OK)
 
 
-@csrf_exempt
 @api_view(['DELETE'])
 def del_follow_pk(request, pk):
     author = User.objects.get(id=pk)
     Follow.objects.filter(user=request.user, author=author).delete()
-    data = {'success': True}
+    data = SUCCESS_TRUE
     return Response(data, status=status.HTTP_200_OK)
 
 
