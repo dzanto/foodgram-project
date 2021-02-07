@@ -49,6 +49,7 @@ class Recipe(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name='recipes',
+        verbose_name='Автор',
     )
     title = models.CharField(max_length=100, verbose_name='Рецепт')
     image = models.ImageField(upload_to='recipe/')
