@@ -13,19 +13,14 @@
                     <li class="nav__item {% if current_url == request.path %} nav__item_active {% endif %}"><a href="{% url 'favorite' %}" class="nav__link link">Избранное</a></li>
                     {% url 'shoplist' as current_url %}
                     <li class="nav__item
-                        {% if user.purchases.count == 0 %}
-                            nav__item_disabled
-                        {% endif %}
-                        {% if current_url == request.path %}
-                            nav__item_active
-                        {% endif %}
-                        ">
+                    {% if user.purchases.count == 0 %}
+                        nav__item_disabled
+                    {% endif %}
+                    {% if current_url == request.path %}
+                        nav__item_active
+                    {% endif %}">
                         <a href="{% url 'shoplist' %}" class="nav__link link">Список покупок</a>
-                        <span class="badge badge_style_blue nav__badge" id="counter">
-                            {% if user.purchases.count %}
-                                {{ user.purchases.count }}
-                            {% endif %}
-                        </span>
+                        <span class="badge badge_style_blue nav__badge" id="counter">{% if user.purchases.count %}{{ user.purchases.count }}{% endif %}</span>
                     </li>
                 {% endif %}
             </ul>

@@ -25,24 +25,32 @@
     </main>
 {% endblock %}
 {% block javascript %}
-    {% if author %}
-        <script src="{% static 'shoplist/js/components/Favorites.js' %}"></script>
-    {% endif %}
-    <script src="{% static 'shoplist/js/components/MainCards.js' %}"></script>
+   <script src="{% static 'shoplist/js/components/MainCards.js' %}"></script>
+
     <script src="{% static 'shoplist/js/components/Purchases.js' %}"></script>
+    <script src="{% static 'shoplist/js/components/Favorites.js' %}"></script>
+    {% if author %}
+        <script src="{% static 'shoplist/js/components/Subscribe.js' %}"></script>
+    {% endif %}
+
     <script src="{% static 'shoplist/js/config/config.js' %}"></script>
+    {% if author %}
+        <script src="{% static 'shoplist/js/components/AuthorRecipe.js' %}"></script>
+    {% endif %}
     {% if not author %}
         <script src="{% static 'shoplist/js/components/CardList.js' %}"></script>
     {% endif %}
     <script src="{% static 'shoplist/js/components/Header.js' %}"></script>
+
     <script src="{% static 'shoplist/js/api/Api.js' %}"></script>
     {% if not author %}
-        <script src="{% static 'shoplist/indexNotAuth.js' %}"></script>
+        {% if user.is_authenticated %}
+            <script src="{% static 'shoplist/indexAuth.js' %}"></script>
+        {% else %}
+            <script src="{% static 'shoplist/indexNotAuth.js' %}"></script>
+        {% endif %}
     {% endif %}
     {% if author %}
-        <script src="{% static 'shoplist/js/components/Subscribe.js' %}"></script>
-        <script src="{% static 'shoplist/js/components/AuthorRecipe.js' %}"></script>
         <script src="{% static 'shoplist/authorRecipe.js' %}"></script>
-
     {% endif %}
 {% endblock %}
