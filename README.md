@@ -52,5 +52,5 @@ python manage.py shell
 - Django Rest Framework
 - JS, CSS, HTML
 ## Об авторе:
-#####Шишлин Антон
-#####https://github.com/dzanto
+Шишлин Антон
+https://github.com/dzanto
