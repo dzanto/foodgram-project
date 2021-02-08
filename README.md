@@ -1,5 +1,4 @@
 # foodgram-project
-foodgram-project
 
 ## Описание проекта
 Приложение «Продуктовый помощник»: сайт, на котором пользователи публикую рецепты,
@@ -53,5 +52,5 @@ python manage.py shell
 - Django Rest Framework
 - JS, CSS, HTML
 ## Об авторе:
-######Шишлин Антон
-######https://github.com/dzanto
+#####Шишлин Антон
+#####https://github.com/dzanto
