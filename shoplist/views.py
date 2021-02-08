@@ -229,25 +229,6 @@ class FavoriteListView(ListView):
         context['tags'] = tags
         return context
 
-    # def get_queryset(self, **kwargs):
-    #     tags = self.request.GET.getlist('tag')
-    #     if tags == []:
-    #         recipes = Recipe.objects.prefetch_related('tags')
-    #         return recipes
-    #     recipes = Recipe.objects.prefetch_related('tags')
-    #     recipes = recipes.filter(tags__title__in=tags).distinct()
-    #     return recipes
-    #
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['user'] = self.request.user
-    #     context['all_tags'] = Tag.objects.all()
-    #     tags = self.request.GET.getlist('tag')
-    #     if tags == []:
-    #         return context
-    #     context['tags'] = tags
-    #     return context
-
 
 class PurchaseListView(ListView):
     model = Recipe
