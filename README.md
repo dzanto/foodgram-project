@@ -53,4 +53,4 @@ python manage.py shell
 - JS, CSS, HTML
 ## Об авторе:
 Шишлин Антон
-https://github.com/dzanto
+https://hh.ru/resume/91066c72ff0876d5180039ed1f44796674474f
